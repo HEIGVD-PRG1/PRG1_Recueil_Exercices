@@ -14,7 +14,7 @@ Pour le voir, vous devrez naviguer dans la colonne de gauche du debugger jusqu'Ã
 using namespace std;
 
 int main() {
-   std::array a { 1, 2, 3};
+   array a { 1, 2, 3};
    for(int i = 0; i < 10; ++i)
       a.at(i) = i;
    cout << "hello" << endl;
