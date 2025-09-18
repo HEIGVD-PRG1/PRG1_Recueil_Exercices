@@ -46,7 +46,7 @@ Pour chaque séquence d'instructions suivante, déterminez si elle est correcte 
 
 1. `n = 0`
 2. Non ce n'est pas correcte. La variable `n` est déclarée deux fois.
-3. Non ce n'est pas correcte. La variable `k` n'est psa déclarée.
+3. Non ce n'est pas correcte. La variable `k` n'est pas déclarée.
 4. Non ce n'est pas correcte. La variable `n` n'est pas initialisé (donc indéfini)
 5. `m = 49`
 6. Non ce n'est pas correcte. La variable `nb_produit` est défini comme const et ne peux pas être modifiée `nb_produit--`.
