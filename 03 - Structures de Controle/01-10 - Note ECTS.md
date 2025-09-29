@@ -46,7 +46,8 @@ using namespace std;
 int main() {
 
    cout << "Entrez la note UNIGE : ";
-   double note; cin >> note;
+   double note;
+   cin >> note;
 
    if (note < 0. or note > 6.) {
       cout << "Erreur";
