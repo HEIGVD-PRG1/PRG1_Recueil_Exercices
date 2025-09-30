@@ -57,7 +57,7 @@ int main() {
    // Calculs des divers volumes [cm3] et du volume total [litre]
    const double volume_cylindre_1 = pi * r1 * r1 * h1;
    const double volume_cylindre_2 = pi * r2 * r2 * h2;
-   const double volume_cone       = pi * (r1 * r1 + r1 * r2 + r2 * r2) * h3 / 3;
+   const double volume_cone       = pi * (r1 * r1 + r1 * r2 + r2 * r2) * h3 / 3.0;
 
    const double volume_total = (volume_cylindre_1 + volume_cylindre_2 + volume_cone) * cm3_en_litre;
 

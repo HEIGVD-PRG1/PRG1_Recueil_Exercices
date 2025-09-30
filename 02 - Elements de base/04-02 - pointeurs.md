@@ -67,21 +67,21 @@ Coder en C++ les questions suivantes.
 
 </details>
 
-8) Afficher "oui" ou "non" selon si `ptr1` et `ptr2` pointent sur la même variable.</br>Ne pas utiliser de `if`
+8) Afficher `1` ou `0` selon si `ptr1` et `ptr2` pointent sur la même variable.</br>Ne pas utiliser de `if`
 
 <details>
 <summary>Réponse</summary>
 
-`cout << (ptr1 == ptr2 ? "oui" : "non");`
+`cout << (ptr1 == ptr2);`
 
 </details>
 
-9) Afficher "oui" ou "non" selon si `ptr1` et `ptr2` pointent sur une valeur identique.</br>Ne pas utiliser de `if`
+9) Afficher `1` ou `0` selon si `ptr1` et `ptr2` pointent sur une valeur identique.</br>Ne pas utiliser de `if`
 
 <details>
 <summary>Réponse</summary>
 
-`cout << (*ptr1 == *ptr2 ? "oui" : "non");`
+`cout << (*ptr1 == *ptr2);`
 
 </details>
 
