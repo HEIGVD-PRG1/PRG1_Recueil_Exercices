@@ -4,7 +4,7 @@ Coder en C++ les questions suivantes.
 
 **NB** : les instructions sont dépendantes les unes des autres
 
-1) Créer une variable `var1` initialisée 1
+1) Créer une variable `var1` de type `int` initialisée 1
 
 <details>
 <summary>Réponse</summary>
@@ -13,7 +13,7 @@ Coder en C++ les questions suivantes.
 
 </details>
 
-2) Créer une variable `var2` initialisée 2
+2) Créer une variable `var2` de type `int` initialisée 2
 
 <details>
 <summary>Réponse</summary>
@@ -22,7 +22,7 @@ Coder en C++ les questions suivantes.
 
 </details>
 
-3) Créer une constante `cste` initialisée 3
+3) Créer une constante `cste` de type `int` initialisée 3
 
 <details>
 <summary>Réponse</summary>
