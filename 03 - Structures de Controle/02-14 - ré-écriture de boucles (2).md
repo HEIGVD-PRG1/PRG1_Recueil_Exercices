@@ -79,6 +79,16 @@ for (; i-- > n;) {
     cout << i << endl;
 }
 ~~~
+
+ou
+
+~~~cpp
+int i; // déclaration hors du for pour ne pas limiter le scope de la variable 
+for (i = 0; i-- > n;) {
+    cout << i << endl;
+}
+~~~
+
 </details>
 
 4. Réécrire la boucle suivante avec une boucle `do ... while`
