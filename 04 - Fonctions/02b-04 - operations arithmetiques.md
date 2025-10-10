@@ -12,14 +12,14 @@ Ecrire aussi un petit programme (main) utilisant cette fonction pour effectuer l
 using namespace std;
 
 //------------------------------------------------------------
-bool operation(double operandeGauche,
-               double operandeDroite,
-               char operateur,
+bool operation(double  operandeGauche,
+               double  operandeDroite,
+               char    operateur,
                double& resultat);
                
 void test(double operandeGauche,
           double operandeDroite,
-          char operateur);
+          char   operateur);
 
 //------------------------------------------------------------
 int main() {
@@ -35,9 +35,9 @@ int main() {
 }
 
 //------------------------------------------------------------
-bool operation(double operandeGauche,
-               double operandeDroite,
-               char operateur,
+bool operation(double  operandeGauche,
+               double  operandeDroite,
+               char    operateur,
                double& resultat) {
    
    switch (operateur) {
@@ -53,7 +53,7 @@ bool operation(double operandeGauche,
 //------------------------------------------------------------
 void test(double operandeGauche,
           double operandeDroite,
-          char operateur) {
+          char   operateur) {
    double resultat;
    if (operation(operandeGauche, operandeDroite, operateur, resultat)) {
       cout << operandeGauche << " " << operateur << " "
