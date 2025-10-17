@@ -36,6 +36,7 @@ Note: utiliser les fonctions de formatage et privilégier l'utilisation des fonc
 <summary>Solution</summary>
 
 ~~~cpp
+#include <cstdlib>
 #include <iostream>
 #include <iomanip>
 #include <string>
@@ -123,10 +124,8 @@ int main() {
     afficher_ligne(nom, to_string(age), double_to_str(note_math), double_to_str(note_prg1), admis ? "Oui" : "Non");
     afficher_resume(moyenne, admis);
 
-    return 0;
+    return EXIT_SUCCESS;
 }
 ~~~
-
-
 
 </details>
