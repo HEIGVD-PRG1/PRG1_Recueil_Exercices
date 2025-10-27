@@ -8,7 +8,10 @@ Modifier le programme en C++ de l'exercice 01-01 pour faire ce qui suit :
 - S'assurer que le programme gère les erreurs d'ouverture de fichier.
 - Pour terminer la saisie, l'utilisateur pourra taper #exit# dans une ligne séprée ou utiliser Ctrl+D.
 
-Ps. Ctrl+D et Ctrl+Z simule le EOF pour les systèmes Unix et Windows, respectivement.   
+Ps : simlulation du EOF (End of File)
+
+Ctrl+D et Ctrl+Z sur Unix et Windows, respectivement.
+Cmd+D sur Mac
 
 <details>
 <summary>Solution</summary>
