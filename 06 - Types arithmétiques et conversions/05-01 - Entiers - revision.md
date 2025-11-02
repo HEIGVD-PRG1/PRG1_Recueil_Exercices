@@ -4,14 +4,14 @@ Pour chacune des lignes de code suivantes, indiquer la valeur afficher, à défa
 
 On suppose que le système utilise le modèle de données LP64.
 
-| Type        |Bites|
+| Type        | Bit |
 |-------------|----:|
-| `char`      |  8  |
-| `short`     | 16  |
-| `int`       | 32  |
-| `long`      | 64  |
-| `long long` | 64  |
-| `void*`     | 64  |
+| `char`      |   8 |
+| `short`     |  16 |
+| `int`       |  32 |
+| `long`      |  64 |
+| `long long` |  64 |
+| `void*`     |  64 |
 
 
 ~~~cpp
