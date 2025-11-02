@@ -46,7 +46,7 @@ else
 <details>
 <summary>Solution</summary>
 
-`non` car en réalité <br>
+`pas d'egalité` car en réalité <br>
 `0.33333333333333331483 == 0.3333333333333333`
 
 </details>
