@@ -167,18 +167,4 @@ Résultat : 1452
 
 </details>
 
-~~~cpp
-// 11
-cout << "Wallis = " << 2/1 * 2/3 * 4/3 * 4/5 << endl;
-~~~
-
-<details>
-<summary>Solution</summary>
-
-Résultat : 0
-
-⚠️ divisions entières
-
-</details>
-
 
