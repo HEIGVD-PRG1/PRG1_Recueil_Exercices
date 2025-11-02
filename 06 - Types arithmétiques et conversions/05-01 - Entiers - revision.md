@@ -203,4 +203,31 @@ else
 
 </details>
 
+~~~cpp
+// 13
+string str(3'000'000'000, 'a');
+for (int i = 0; i < str.length(); i++) {
+   cout << str[i];
+}
+~~~
+
+Note : [constructeur : string (size_t n, char c);](https://cplusplus.com/reference/string/string/string/)
+=> Fills the string with n consecutive copies of character c
+
+<details>
+<summary>Solution</summary>
+
+⚠️ débordement possible de `i` qui aura une valeur négative incompatible avec l'adressage d'un caractère dans le `string`.
+
+Certes `str` est exceptionnellement long, mais il est important d'éviter les convertion de type est d'utiliser `size_t`.
+
+~~~cpp
+for (size_t i = 0; i < str.length(); i++) {
+   cout << str[i];
+}
+~~~
+
+</details>
+
+
 
