@@ -22,7 +22,7 @@ cout << double(1 / 3);
 
 `0`
 
-⚠️ La conversion est fait après l'evaluation de l'expression.
+⚠️ La conversion est fait après l'évaluation de l'expression.
 
 </details>
 
