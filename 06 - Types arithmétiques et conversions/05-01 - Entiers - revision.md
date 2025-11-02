@@ -1,6 +1,6 @@
 # Entiers - révision
 
-Pour chacune des lignes de code suivantes, indiquer la valeur afficher, à défault la raison. 
+Pour chacune des lignes de code suivantes, indiquer la valeur afficher, à défault la raison de l'erreur.
 
 On suppose que le système utilise le modèle de données LP64.
 
