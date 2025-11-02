@@ -31,6 +31,33 @@ cout << 2 * x / x;
 <details>
 <summary>Solution</summary>
 
-`*inf*`
+Débordement => `*inf*`
+
+</details>
+
+~~~cpp
+// 3
+cout << (1 / 3. == 3.333333 ? "oui" : "non");
+~~~
+
+<details>
+<summary>Solution</summary>
+
+`non` car en réalité <br>
+`0.33333333333333331483 == 3.333333`
+
+</details>
+
+~~~cpp
+// 4
+// coder ceci correctement de manière à résoudre ce problème
+cout << (1 / 3. == 3.333333 ? "oui" : "non");
+~~~
+
+<details>
+<summary>Solution</summary>
+
+`non` car en réalité <br>
+`0.33333333333333331483 == 3.333333`
 
 </details>
