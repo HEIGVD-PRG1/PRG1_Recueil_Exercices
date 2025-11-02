@@ -67,7 +67,7 @@ cout << fixed << reel << endl;
 
 `1234567936.000000`
 
-⚠️ `entier` contient trop de chiffres significatifs pour le float qui n'en a que 7 ou 9 sur 32 bits.
+⚠️ `entier` contient trop de chiffres significatifs pour le `float` qui n'en a que 7 ou 9 sur 32 bits.
 
 </details>
 
@@ -84,8 +84,7 @@ else
 
 `egalité`
 
-⚠️ même problème que précédement mais pour réaliser le teste d'égalité avec l'opérateur `==`, l'opérande de droite en `int` est convertie en `float`.<br>
-Ainsi, le problème ne voit pas !!
+⚠️ même problème que précédement mais pour réaliser le teste d'égalité avec l'opérateur `==`, l'opérande de droite en `int` est convertie en `float`. Ainsi, le problème ne voit pas !!
 
 </details>
 
