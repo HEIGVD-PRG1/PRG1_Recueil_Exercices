@@ -4,7 +4,7 @@ Pour chacune des lignes de code suivantes, indiquer la valeur afficher, à défa
 
 On suppose que le système utilise le modèle de données LP64.
 
-| Type         |Bit|
+| Type         | Bit |
 |--------------|:---:|
 | `float`      |  32 |
 | `double`     |  64 |
@@ -31,7 +31,8 @@ cout << 2 * x / x;
 <details>
 <summary>Solution</summary>
 
-Débordement => `*inf*`
+Priorité des opérateurs de gauche à droite<br>
+`2 * x` => débordement => `*inf*`
 
 </details>
 
