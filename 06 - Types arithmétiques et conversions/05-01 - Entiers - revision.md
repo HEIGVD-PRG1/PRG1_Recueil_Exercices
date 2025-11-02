@@ -143,7 +143,7 @@ Bien que `b`soit `unsigned`, sa valeur est toujours représentable sur un `long`
 
 ~~~cpp
 // 10
-Convertir à la main 0x32A en Octale
+Convertir à la main 0x32A en Octal
 ~~~
 
 <details>
@@ -151,6 +151,7 @@ Convertir à la main 0x32A en Octale
 
 `Résultat : 1452`
 
+**Methode**
 1) convertir 0x32A en binaire
 2) les grouper par 3 bits
 3) interpréter ces 3 bits en valeurs octales
