@@ -10,7 +10,6 @@ On suppose que le système utilise le modèle de données LP64.
 | `double`     |  64 |
 | `long double`|  64 |
 
-
 ~~~cpp
 // 1
 cout << round(floor(-9.8) / ceil(-4.9));
@@ -19,8 +18,19 @@ cout << round(floor(-9.8) / ceil(-4.9));
 <details>
 <summary>Solution</summary>
 
+`3`
+
+</details>
+
 ~~~cpp
-3
+// 2
+double x = numeric_limits<double>::max();
+cout << 2 * x / x;
 ~~~
+
+<details>
+<summary>Solution</summary>
+
+`*inf*`
 
 </details>

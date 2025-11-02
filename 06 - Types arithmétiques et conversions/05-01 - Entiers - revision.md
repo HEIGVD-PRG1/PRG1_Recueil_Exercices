@@ -23,9 +23,7 @@ cout << sh;
 <details>
 <summary>Solution</summary>
 
-~~~cpp
-32767
-~~~
+`32767`
 
 </details>
 
@@ -51,7 +49,7 @@ cout << sh;
 <details>
 <summary>Solution</summary>
 
-2^16 - 1 => 65535
+`2^16 - 1 => 65535`
 
 </details>
 
@@ -64,7 +62,7 @@ cout << sh;
 <details>
 <summary>Solution</summary>
 
-65535 + 1 = 65536 mais affecté à un `short` => modulo 2^16 => 0
+`65535 + 1 = 65536` mais affecté à un `short` => modulo 2^16 => `0`
 
 </details>
 
@@ -77,7 +75,7 @@ cout << sh + 1;
 <details>
 <summary>Solution</summary>
 
-65535 + 1
+`65535 + 1`
 
 ⚠️ Ceci étant une expression, le calcul se fait en `int` avec promotion `sh`
 
@@ -92,7 +90,7 @@ cout << sh;
 <details>
 <summary>Solution</summary>
 
-65535
+`65535`
 
 </details>
 
@@ -136,7 +134,7 @@ cout << b - a;
 <details>
 <summary>Solution</summary>
 
--1
+`-1`
 
 ⚠️ `a` est codé sur 64 bits et `b` sur 32 bits
 Bien que `b`soit `unsigned`, sa valeur est toujours représentable sur un `long`même signé. `b` est converti en `long`
@@ -151,7 +149,7 @@ Convertir à la main 0x32A en Octale
 <details>
 <summary>Solution</summary>
 
-Résultat : 1452
+`Résultat : 1452`
 
 1) convertir 0x32A en binaire
 2) les grouper par 3 bits
@@ -175,7 +173,7 @@ cout << "Wallis = " << 2/1 * 2/3 * 4/3 * 4/5 << endl;
 <details>
 <summary>Solution</summary>
 
-Résultat : 0
+`Résultat : 0`
 
 ⚠️ divisions entières
 
