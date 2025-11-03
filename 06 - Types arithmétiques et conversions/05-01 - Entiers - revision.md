@@ -186,9 +186,9 @@ cout << "Wallis = " << 2/1 * 2/3 * 4/3 * 4/5 << endl;
 // vérifier s'il y a débordement pour a + b
 int a, b;
 if ( /* votre réponse ici */ )
-   cout << "pas de débordement" << endl;
-else
    cout << "débordement" << endl;
+else
+   cout << "pas de débordement" << endl;
 ~~~
 
 <details>
@@ -196,9 +196,9 @@ else
 
 ~~~cpp
 if (a > numeric_limits<int>::max() - b)
-   cout << "pas de débordement" << endl;
-else
    cout << "débordement" << endl;
+else
+   cout << "pas de débordement" << endl;
 ~~~
 
 </details>
