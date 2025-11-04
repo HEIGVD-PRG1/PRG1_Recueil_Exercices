@@ -66,7 +66,7 @@ else
 <summary>Solution</summary>
 
 ~~~cpp
-if ( abs(1 / 3. - 0.3333333333333333) <= numeric_limits<double>::epsilon())
+if ( fabs(1 / 3. - 0.3333333333333333) <= numeric_limits<double>::epsilon())
    cout << "egalité" << endl;
 else
    cout << "pas d'egalité" << endl;
