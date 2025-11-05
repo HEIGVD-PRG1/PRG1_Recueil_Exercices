@@ -75,7 +75,7 @@ cout << sh + 1;
 <details>
 <summary>Solution</summary>
 
-`65535 + 1`
+`65535 + 1 = 65536 `
 
 ⚠️ Ceci étant une expression, le calcul se fait en `int` avec promotion `sh`
 
