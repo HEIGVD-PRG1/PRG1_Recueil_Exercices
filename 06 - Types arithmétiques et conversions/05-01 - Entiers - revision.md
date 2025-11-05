@@ -118,6 +118,8 @@ cout << --sh;
 <details>
 <summary>Solution</summary>
 
+`65535`
+
 ⚠️ par promotion à cause de l'opérateur de pré-décrémentation `--` le calcul se fait en `int` <br> mais ce même opèrateur returne une référence sur `sh` et l'opérateur choisi `<<` est celui du `unsigned short` également
 
 </details>
