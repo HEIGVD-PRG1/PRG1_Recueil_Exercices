@@ -103,6 +103,8 @@ cout << -sh;
 <details>
 <summary>Solution</summary>
 
+`-1`
+
 ⚠️ par promotion à cause de l'opérateur unaire `-` le calcul se fait en `int` <br> et l'opérateur `<<` choisi est celui du `int` également
 
 </details>
