@@ -211,7 +211,7 @@ else
 // 13
 string str(3'000'000'000, 'a');
 for (int i = 0; i < str.length(); i++) {
-   cout << str[i];
+   cout << str.at(i);
 }
 ~~~
 
