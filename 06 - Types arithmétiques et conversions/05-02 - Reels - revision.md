@@ -95,7 +95,7 @@ cout << setprecision(20) << float (1 / 3.) << endl; // 0.3333333432674407959
 </details>
 
 ~~~cpp
-// 5
+// 6
 float reel = 3.14159e42;
 cout << reel << endl;
 ~~~
@@ -115,7 +115,7 @@ cout << numeric_limits<double>::min()  << endl; // 2.22507e-308
 </details>
 
 ~~~cpp
-// 6
+// 7
 float reel = 1e7 + 1.01;
 cout << fixed << reel << endl;
 ~~~
