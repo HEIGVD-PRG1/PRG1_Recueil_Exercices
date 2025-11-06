@@ -32,7 +32,7 @@ cout << 2 * x / x;
 <summary>Solution</summary>
 
 Priorité des opérateurs de gauche à droite<br>
-`2 * x` => débordement => `*inf*`
+`2 * x` => débordement => `inf`
 
 </details>
 
