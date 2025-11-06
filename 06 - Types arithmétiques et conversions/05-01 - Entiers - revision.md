@@ -4,14 +4,21 @@ Pour chacune des lignes de code suivantes, indiquer la valeur afficher, à défa
 
 On suppose que le système utilise le modèle de données LP64.
 
-| Type        | Bit | Limites                                 |              Valeur |
-|-------------|----:|:----------------------------------------|--------------------:|
-| `char`      |   8 | numeric_limits\<short\>::max()          |               32767 |
-| `short`     |  16 | numeric_limits\<unsigned short\>::max() |               65535 |
-| `int`       |  32 | numeric_limits\<unsigned int\>::max()   |          4294967295 |
-| `long`      |  64 | numeric_limits\<long>\::max()           | 9223372036854775807 | 
-| `long long` |  64 |                                         |                     |
-| `void*`     |  64 |                                         |                     |
+| Type        | Bit |
+|-------------|----:|
+| `char`      |   8 |
+| `short`     |  16 |
+| `int`       |  32 |
+| `long`      |  64 |
+| `long long` |  64 |
+| `void*`     |  64 |
+
+~~~cpp
+cout << numeric_limits<short>::max()          << endl; // 32767
+cout << numeric_limits<unsigned short>::max() << endl; // 65535
+cout << numeric_limits<unsigned int>::max()   << endl; // 4294967295
+cout << numeric_limits<long>::max()           << endl; // 9223372036854775807
+~~~
 
 ~~~cpp
 // 1

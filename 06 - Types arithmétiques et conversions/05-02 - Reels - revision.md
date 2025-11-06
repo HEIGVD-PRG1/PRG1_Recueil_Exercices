@@ -11,6 +11,13 @@ On suppose que le système utilise le modèle de données LP64.
 | `long double`|  64 |
 
 ~~~cpp
+cout << numeric_limits<float>::max()   << endl; // 3.40282e+38
+cout << numeric_limits<float>::min()   << endl; // 1.17549e-38
+cout << numeric_limits<double>::max()  << endl; // 1.79769e+308
+cout << numeric_limits<double>::min()  << endl; // 2.22507e-308
+~~~
+
+~~~cpp
 // 1
 cout << round(floor(-9.8) / ceil(-4.9));
 ~~~
@@ -104,13 +111,6 @@ cout << reel << endl;
 <summary>Solution</summary>
 
 `inf`
-
-~~~cpp
-cout << numeric_limits<float>::max()   << endl; // 3.40282e+38
-cout << numeric_limits<float>::min()   << endl; // 1.17549e-38
-cout << numeric_limits<double>::max()  << endl; // 1.79769e+308
-cout << numeric_limits<double>::min()  << endl; // 2.22507e-308
-~~~
 
 </details>
 
