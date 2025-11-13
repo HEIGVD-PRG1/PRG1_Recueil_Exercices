@@ -14,7 +14,7 @@ Indiquez à part le contenu de la variable tampon
 <summary>Solution</summary>
 
 | 3 | 2 | 5 | 1 | 4 |TMP|
-|---|---|---|---|---|---|
+|:-:|:-:|:-:|:-:|:-:|:-:|
 | 3 | 2 | 5 | 1 | 4 | 2 |
 | 3 | 3 | 5 | 1 | 4 |   |
 | 2 | 3 | 5 | 1 | 4 | 5 |
@@ -36,7 +36,7 @@ Indiquez à part le contenu de la variable tampon
 <summary>Solution</summary>
 
 | 4 | 3 | 2 | 5 | 1 |TMP|
-|---|---|---|---|---|---|
+|:-:|:-:|:-:|:-:|:-:|:-:|
 | 4 | 3 | 2 | 5 | 1 | 3 |
 | 4 | 4 | 2 | 5 | 1 |   |
 | 3 | 4 | 2 | 5 | 1 | 2 |
@@ -60,7 +60,7 @@ Indiquez à part le contenu de la variable tampon
 <summary>Solution</summary>
 
 | 5 | 4 | 2 | 3 | 1 |TMP|
-|---|---|---|---|---|---|
+|:-:|:-:|:-:|:-:|:-:|:-:|
 | 5 | 4 | 2 | 3 | 1 | 4 |
 | 5 | 5 | 2 | 3 | 1 |   |
 | 4 | 5 | 2 | 3 | 1 | 2 |
