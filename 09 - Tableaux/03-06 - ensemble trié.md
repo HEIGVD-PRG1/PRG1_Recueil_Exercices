@@ -1,6 +1,6 @@
 # Ensemble trié
 
-Modifier l'exercice précédent pour que l'ensemble créé aie ses éléments triés par ordre croissant
+Modifier l'exercice précédent pour que l'ensemble créé ait ses éléments triés par ordre croissant
 
 Le programme suivant 
 
