@@ -3,7 +3,7 @@
 Effectuez le tri par sélecton sur les tableaux suivants. 
 Indiquez l'état du tableau après chaque échange, même si
 les 2 éléments échangés sont le même élément. 
-Les valeurs assurément triées sont représentées entre`()`.
+<br>Les valeurs assurément triées sont représentées entre`()`.
 
 ~~~
 1) 3 2 5 1 4

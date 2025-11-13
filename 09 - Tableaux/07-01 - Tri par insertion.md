@@ -4,7 +4,7 @@ Effectuez le tri par insertion sur les tableaux suivants.
 Indiquez l'état du tableau après chaque écriture dans 
 le tableau, même si elle écrit une valeur déjà présente. 
 Indiquez à part le contenu de la variable tampon
-Les valeurs assurément triées sont représentées entre`()`.
+<br>Les valeurs assurément triées sont représentées entre`()`.
 
 ~~~
 1) 3 2 5 1 4

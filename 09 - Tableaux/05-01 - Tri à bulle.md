@@ -2,7 +2,7 @@
 
 Effectuez le tri à bulles sur les tableaux suivants. 
 Indiquez l'état du tableau après chaque échange.
-Les valeurs assurément triées sont représentées entre`()`.
+<br>Les valeurs assurément triées sont représentées entre`()`.
 
 ~~~
 1) 3 2 5 1 4
