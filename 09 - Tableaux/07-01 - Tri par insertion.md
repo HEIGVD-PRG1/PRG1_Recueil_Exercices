@@ -13,7 +13,6 @@ Indiquez à part le contenu de la variable tampon
 <details>
 <summary>Solution</summary>
 
-~~~
 | 3 | 2 | 5 | 1 | 4 |TMP|
 |---|---|---|---|---|---|
 | 3 | 2 | 5 | 1 | 4 | 2 |
@@ -26,7 +25,6 @@ Indiquez à part le contenu de la variable tampon
 | 1 | 2 | 3 | 5 | 4 | 4 |
 | 1 | 2 | 3 | 5 | 5 |   |
 | 1 | 2 | 3 | 4 | 5 |   |
-~~~
 
 </details>
 
@@ -37,7 +35,6 @@ Indiquez à part le contenu de la variable tampon
 <details>
 <summary>Solution</summary>
 
-~~~
 | 4 | 3 | 2 | 5 | 1 |TMP|
 |---|---|---|---|---|---|
 | 4 | 3 | 2 | 5 | 1 | 3 |
@@ -52,7 +49,6 @@ Indiquez à part le contenu de la variable tampon
 | 2 | 3 | 3 | 4 | 5 |   |
 | 2 | 2 | 3 | 4 | 5 |   |
 | 1 | 2 | 3 | 4 | 5 |   |
-~~~
 
 </details>
 
@@ -63,7 +59,6 @@ Indiquez à part le contenu de la variable tampon
 <details>
 <summary>Solution</summary>
 
-~~~
 | 5 | 4 | 2 | 3 | 1 |TMP|
 |---|---|---|---|---|---|
 | 5 | 4 | 2 | 3 | 1 | 4 |
@@ -80,7 +75,6 @@ Indiquez à part le contenu de la variable tampon
 | 2 | 3 | 3 | 4 | 5 |   |
 | 2 | 2 | 3 | 4 | 5 |   |
 | 1 | 2 | 3 | 4 | 5 |   |
-~~~
 
 </details>
 
