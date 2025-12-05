@@ -18,7 +18,7 @@ public:
                                                           cout << "=C("  << other << "->" << *this << ") ";
                                                           return *this; }
 private:
-   static int  nextId;
+   static int  nextId;      // propriété commune à tous les objects de cette classe
           int  id;
           char data;
 };
