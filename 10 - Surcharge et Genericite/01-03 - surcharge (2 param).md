@@ -326,7 +326,7 @@ fct('a', 2L);
 
 ~~~cpp
 // no 16
-fct('a', 2.0L);	
+fct('a', 2.0L);
 ~~~
 
 <details>
