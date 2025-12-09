@@ -4,7 +4,7 @@
 - Utilisation de tableaux `vector<T>`
 - Utilisation des `vector<T>::iterator`
 - Utilisation intense de `algorithm` et `numeric` 🤔
-- En conséquence, **aucune boucle explicite dans votre rendu !** 👍
+- En conséquence, **aucune boucle explicite (for, while, do ..w while) dans votre rendu !** 👍
 
 
 ### A faire
