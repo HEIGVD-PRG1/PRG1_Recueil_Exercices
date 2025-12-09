@@ -39,7 +39,7 @@ Développer une librairie générique mettant à disposition à minima les fonct
 <br>
 
 <details>
-<summary> Ce programme `main.cpp` produit le résultat ci-après </summary>
+<summary> Ce programme <code>main.cpp</code> produit le résultat ci-après </summary>
 
 ~~~cpp
 #include <cstdlib>
@@ -156,7 +156,7 @@ void test(Matrix<T> m){
 </details>
 
 <details>
-<summary> output produit par le main </summary>
+<summary> <code>output</code> produit par le main </summary>
 
 ~~~
 -------------------------------------------------------
@@ -362,7 +362,7 @@ sort matrix    : [[], [5, 2, 8], [4, 3, 9]]
 </details>
 
 <details>
-<summary> `solution` produit </summary>
+<summary> <code>solution</code> produit </summary>
 
 ~~~cpp
 #include <ostream>
