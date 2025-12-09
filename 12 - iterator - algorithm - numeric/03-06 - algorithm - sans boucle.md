@@ -50,85 +50,83 @@ using namespace std;
 
 //------------------------------------------------------------------
 template <typename T>
-void test(Matrix<T> matrice);
+void test(Matrix<T> matrix);
 
 //------------------------------------------------------------------
 int main(){
 
-   using Matrice = Matrix<int>;
+   using Matrix = Matrix<int>;
 
    //---------------------------------------------------------------
-   // matrices de test
-   //---------------------------------------------------------------
-   // vide
-   Matrice vide;                       // 0x0
+   // empty
+   Matrix vide;                       // 0x0
 
-   // régulières
-   Matrice reg1   = {{1}};             // 1x1
-   Matrice reg2   = {{4, 3},           // 2x2
+   // regular
+   Matrix reg1   = {{1}};             // 1x1
+   Matrix reg2   = {{4, 3},           // 2x2
                      {1, 2}};
-   Matrice reg3   = {{5, 2, 8},        // 3x3
+   Matrix reg3   = {{5, 2, 8},        // 3x3
                      {4, 3, 9},
                      {1, 6, 7}};
 
-   // non carrée mais régulières
-   Matrice reg10  = {{}};              // 1x0
-   Matrice reg11  = {{},               // 2x0
+   // rectangular and regular
+   Matrix reg10  = {{}};              // 1x0
+   Matrix reg11  = {{},               // 2x0
                      {}};
-   Matrice reg12  = {{1},              // 2x1
+   Matrix reg12  = {{1},              // 2x1
                      {2}};
-   Matrice reg13  = {{1, 2, 3},        // 2x3
+   Matrix reg13  = {{1, 2, 3},        // 2x3
                      {4, 5, 6}};
-   Matrice reg14  = {{1, 2},           // 3x2
+   Matrix reg14  = {{1, 2},           // 3x2
                      {3, 4},
                      {5, 6}};
 
-   // irrégulières
-   Matrice ireg01 = {{1},
+   // irregular
+   Matrix ireg01 = {{1},
                      {}};
-   Matrice ireg02 = {{},
+   Matrix ireg02 = {{},
                      {1}};
-   Matrice ireg03 = {{},
+   Matrix ireg03 = {{},
                      {1, 2}};
-   Matrice ireg04 = {{1, 2},
+   Matrix ireg04 = {{1, 2},
                     {}};
-   Matrice ireg05 = {{},
+   Matrix ireg05 = {{},
                      {4, 3, 9},
                      {1, 6, 7}};
-   Matrice ireg06 = {{5},
+   Matrix ireg06 = {{5},
                      {4, 3, 9},
                      {1, 6, 7}};
-   Matrice ireg07 = {{5, 2},
+   Matrix ireg07 = {{5, 2},
                      {4, 3, 9},
                      {1, 6, 7}};
-   Matrice ireg08 = {{5, 2, 8},
+   Matrix ireg08 = {{5, 2, 8},
                      {4, 3},
                      {1, 6, 7}};
-   Matrice ireg09 = {{5, 2, 8},
+   Matrix ireg09 = {{5, 2, 8},
                      {4},
                      {1, 6, 7}};
-   Matrice ireg10 = {{5, 2, 8},
+   Matrix ireg10 = {{5, 2, 8},
                      {},
                      {1, 6, 7}};
-   Matrice ireg11 = {{5, 2, 8},
+   Matrix ireg11 = {{5, 2, 8},
                      {4, 3, 9},
                      {1, 6}};
-   Matrice ireg12 = {{5, 2, 8},
+   Matrix ireg12 = {{5, 2, 8},
                      {4, 3, 9},
                      {1}};
-   Matrice ireg13 = {{5, 2, 8},
+   Matrix ireg13 = {{5, 2, 8},
                      {4, 3, 9},
                      {}};
 
    //---------------------------------------------------------------
    // test program
    //---------------------------------------------------------------
-   vector<Matrice> matrices = {
+   vector<Matrix> matrix = {
       vide,   reg1,   reg2,   reg3,   reg10,  reg11,  reg12,  reg13,  reg14,
       ireg01, ireg02, ireg03, ireg04, ireg05, ireg06, ireg07, ireg08, ireg09, ireg10,
       ireg11, ireg12, ireg13};
 
-   for_each(matrices.begin(), matrices.end(), test<int>);
+   for_each(matrix.begin(), matrix.end(), test<int>);
 
    cout << endl;
 
@@ -140,7 +138,7 @@ template <typename T>
 void test(Matrix<T> m){
 
    cout << "-------------------------------------------------------" << endl;
-   cout << "matrice        : " << m                                  << endl;
+   cout << "matrix         : " << m                                  << endl;
    cout << "isSquare       : " << (isSquare<int>(m)  ? "yes" : "no") << endl;
    cout << "isRegular      : " << (isRegular<int>(m) ? "yes" : "no") << endl;
    cout << "totalLine      : " << vectSumLine<int>(m)                << endl;
@@ -158,11 +156,11 @@ void test(Matrix<T> m){
 </details>
 
 <details>
-<summary> `output` produit </summary>
+<summary> output produit par le main </summary>
 
 ~~~
 -------------------------------------------------------
-matrice        : []
+matrix         : []
 isSquare       : yes
 isRegular      : yes
 totalLine      : []
@@ -171,7 +169,7 @@ vector sum min : []
 shuffle matrix : []
 sort matrix    : []
 -------------------------------------------------------
-matrice        : [[1]]
+matrix         : [[1]]
 isSquare       : yes
 isRegular      : yes
 totalLine      : [1]
@@ -180,25 +178,25 @@ vector sum min : [1]
 shuffle matrix : [[1]]
 sort matrix    : [[1]]
 -------------------------------------------------------
-matrice        : [[4, 3], [1, 2]]
+matrix         : [[4, 3], [1, 2]]
 isSquare       : yes
 isRegular      : yes
 totalLine      : [7, 3]
 totalColumn    : [5, 5]
 vector sum min : [1, 2]
-shuffle matrix : [[4, 3], [1, 2]]
+shuffle matrix : [[1, 2], [4, 3]]
 sort matrix    : [[1, 2], [4, 3]]
 -------------------------------------------------------
-matrice        : [[5, 2, 8], [4, 3, 9], [1, 6, 7]]
+matrix         : [[5, 2, 8], [4, 3, 9], [1, 6, 7]]
 isSquare       : yes
 isRegular      : yes
 totalLine      : [15, 16, 14]
 totalColumn    : [10, 11, 24]
 vector sum min : [1, 6, 7]
-shuffle matrix : [[1, 6, 7], [4, 3, 9], [5, 2, 8]]
+shuffle matrix : [[4, 3, 9], [5, 2, 8], [1, 6, 7]]
 sort matrix    : [[1, 6, 7], [5, 2, 8], [4, 3, 9]]
 -------------------------------------------------------
-matrice        : [[]]
+matrix         : [[]]
 isSquare       : no
 isRegular      : yes
 totalLine      : [0]
@@ -207,7 +205,7 @@ vector sum min : []
 shuffle matrix : [[]]
 sort matrix    : [[]]
 -------------------------------------------------------
-matrice        : [[], []]
+matrix         : [[], []]
 isSquare       : no
 isRegular      : yes
 totalLine      : [0, 0]
@@ -216,7 +214,7 @@ vector sum min : []
 shuffle matrix : [[], []]
 sort matrix    : [[], []]
 -------------------------------------------------------
-matrice        : [[1], [2]]
+matrix         : [[1], [2]]
 isSquare       : no
 isRegular      : yes
 totalLine      : [1, 2]
@@ -225,7 +223,7 @@ vector sum min : [1]
 shuffle matrix : [[2], [1]]
 sort matrix    : [[1], [2]]
 -------------------------------------------------------
-matrice        : [[1, 2, 3], [4, 5, 6]]
+matrix         : [[1, 2, 3], [4, 5, 6]]
 isSquare       : no
 isRegular      : yes
 totalLine      : [6, 15]
@@ -234,25 +232,25 @@ vector sum min : [1, 2, 3]
 shuffle matrix : [[4, 5, 6], [1, 2, 3]]
 sort matrix    : [[1, 2, 3], [4, 5, 6]]
 -------------------------------------------------------
-matrice        : [[1, 2], [3, 4], [5, 6]]
+matrix         : [[1, 2], [3, 4], [5, 6]]
 isSquare       : no
 isRegular      : yes
 totalLine      : [3, 7, 11]
 totalColumn    : [9, 12]
 vector sum min : [1, 2]
-shuffle matrix : [[1, 2], [3, 4], [5, 6]]
+shuffle matrix : [[3, 4], [5, 6], [1, 2]]
 sort matrix    : [[1, 2], [3, 4], [5, 6]]
 -------------------------------------------------------
-matrice        : [[1], []]
+matrix         : [[1], []]
 isSquare       : no
 isRegular      : no
 totalLine      : [1, 0]
 totalColumn    : [1]
 vector sum min : []
-shuffle matrix : [[1], []]
-sort matrix    : [[], [1]]
+shuffle matrix : [[], [1]]
+sort matrix    : [[1], []]
 -------------------------------------------------------
-matrice        : [[], [1]]
+matrix         : [[], [1]]
 isSquare       : no
 isRegular      : no
 totalLine      : [0, 1]
@@ -261,61 +259,61 @@ vector sum min : []
 shuffle matrix : [[], [1]]
 sort matrix    : [[1], []]
 -------------------------------------------------------
-matrice        : [[], [1, 2]]
+matrix         : [[], [1, 2]]
 isSquare       : no
 isRegular      : no
 totalLine      : [0, 3]
 totalColumn    : [1, 2]
 vector sum min : []
-shuffle matrix : [[1, 2], []]
-sort matrix    : [[], [1, 2]]
+shuffle matrix : [[], [1, 2]]
+sort matrix    : [[1, 2], []]
 -------------------------------------------------------
-matrice        : [[1, 2], []]
+matrix         : [[1, 2], []]
 isSquare       : no
 isRegular      : no
 totalLine      : [3, 0]
 totalColumn    : [1, 2]
 vector sum min : []
-shuffle matrix : [[], [1, 2]]
-sort matrix    : [[1, 2], []]
+shuffle matrix : [[1, 2], []]
+sort matrix    : [[], [1, 2]]
 -------------------------------------------------------
-matrice        : [[], [4, 3, 9], [1, 6, 7]]
+matrix         : [[], [4, 3, 9], [1, 6, 7]]
 isSquare       : no
 isRegular      : no
 totalLine      : [0, 16, 14]
 totalColumn    : [5, 9, 16]
 vector sum min : []
-shuffle matrix : [[1, 6, 7], [], [4, 3, 9]]
-sort matrix    : [[4, 3, 9], [], [1, 6, 7]]
+shuffle matrix : [[1, 6, 7], [4, 3, 9], []]
+sort matrix    : [[], [1, 6, 7], [4, 3, 9]]
 -------------------------------------------------------
-matrice        : [[5], [4, 3, 9], [1, 6, 7]]
+matrix         : [[5], [4, 3, 9], [1, 6, 7]]
 isSquare       : no
 isRegular      : no
 totalLine      : [5, 16, 14]
 totalColumn    : [10, 9, 16]
 vector sum min : [5]
-shuffle matrix : [[5], [4, 3, 9], [1, 6, 7]]
+shuffle matrix : [[4, 3, 9], [1, 6, 7], [5]]
 sort matrix    : [[5], [1, 6, 7], [4, 3, 9]]
 -------------------------------------------------------
-matrice        : [[5, 2], [4, 3, 9], [1, 6, 7]]
+matrix         : [[5, 2], [4, 3, 9], [1, 6, 7]]
 isSquare       : no
 isRegular      : no
 totalLine      : [7, 16, 14]
 totalColumn    : [10, 11, 16]
 vector sum min : [5, 2]
-shuffle matrix : [[4, 3, 9], [5, 2], [1, 6, 7]]
+shuffle matrix : [[1, 6, 7], [5, 2], [4, 3, 9]]
 sort matrix    : [[5, 2], [1, 6, 7], [4, 3, 9]]
 -------------------------------------------------------
-matrice        : [[5, 2, 8], [4, 3], [1, 6, 7]]
+matrix         : [[5, 2, 8], [4, 3], [1, 6, 7]]
 isSquare       : no
 isRegular      : no
 totalLine      : [15, 7, 14]
 totalColumn    : [10, 11, 15]
 vector sum min : [4, 3]
-shuffle matrix : [[1, 6, 7], [5, 2, 8], [4, 3]]
+shuffle matrix : [[5, 2, 8], [4, 3], [1, 6, 7]]
 sort matrix    : [[4, 3], [1, 6, 7], [5, 2, 8]]
 -------------------------------------------------------
-matrice        : [[5, 2, 8], [4], [1, 6, 7]]
+matrix         : [[5, 2, 8], [4], [1, 6, 7]]
 isSquare       : no
 isRegular      : no
 totalLine      : [15, 4, 14]
@@ -324,25 +322,25 @@ vector sum min : [4]
 shuffle matrix : [[5, 2, 8], [4], [1, 6, 7]]
 sort matrix    : [[4], [1, 6, 7], [5, 2, 8]]
 -------------------------------------------------------
-matrice        : [[5, 2, 8], [], [1, 6, 7]]
+matrix         : [[5, 2, 8], [], [1, 6, 7]]
 isSquare       : no
 isRegular      : no
 totalLine      : [15, 0, 14]
 totalColumn    : [6, 8, 15]
 vector sum min : []
-shuffle matrix : [[1, 6, 7], [5, 2, 8], []]
-sort matrix    : [[], [1, 6, 7], [5, 2, 8]]
+shuffle matrix : [[1, 6, 7], [], [5, 2, 8]]
+sort matrix    : [[5, 2, 8], [], [1, 6, 7]]
 -------------------------------------------------------
-matrice        : [[5, 2, 8], [4, 3, 9], [1, 6]]
+matrix         : [[5, 2, 8], [4, 3, 9], [1, 6]]
 isSquare       : no
 isRegular      : no
 totalLine      : [15, 16, 7]
 totalColumn    : [10, 11, 17]
 vector sum min : [1, 6]
-shuffle matrix : [[1, 6], [4, 3, 9], [5, 2, 8]]
+shuffle matrix : [[5, 2, 8], [1, 6], [4, 3, 9]]
 sort matrix    : [[1, 6], [5, 2, 8], [4, 3, 9]]
 -------------------------------------------------------
-matrice        : [[5, 2, 8], [4, 3, 9], [1]]
+matrix         : [[5, 2, 8], [4, 3, 9], [1]]
 isSquare       : no
 isRegular      : no
 totalLine      : [15, 16, 1]
@@ -351,7 +349,7 @@ vector sum min : [1]
 shuffle matrix : [[4, 3, 9], [5, 2, 8], [1]]
 sort matrix    : [[1], [5, 2, 8], [4, 3, 9]]
 -------------------------------------------------------
-matrice        : [[5, 2, 8], [4, 3, 9], []]
+matrix         : [[5, 2, 8], [4, 3, 9], []]
 isSquare       : no
 isRegular      : no
 totalLine      : [15, 16, 0]
