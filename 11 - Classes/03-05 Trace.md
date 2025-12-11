@@ -166,7 +166,7 @@ vector<Trace> vect(3, Trace('b'));
 <summary>Solution</summary>
 
 ~~~
-Ci(9b) CC(9b->10b) CC(9b->11b) CC(9b->12b) D(9b)   3 / 3
+Ci(9b) CC(9b->10b) CC(9b->11b) CC(9b->12b) D(9b)
 ~~~
 
 - création de `Trace(2)` => `Ci(9b)`
@@ -193,7 +193,7 @@ vect.push_back(trace1a);
 <summary>Solution</summary>
 
 ~~~
-CC(1a->13a) CC(12b->14b) CC(11b->15b) CC(10b->16b) D(12b) D(11b) D(10b)   4 / 6
+CC(1a->13a) CC(12b->14b) CC(11b->15b) CC(10b->16b) D(12b) D(11b) D(10b)
 ~~~
 
 - mise à jour de la capacité (3 => 6) et de la taille (3 => 4) du vecteur 
