@@ -24,6 +24,9 @@ void listerPoints(const vector<Point<T>>& v) {
       cout << endl;
    }
 }
+
+// appel
+listerPoints(dessin);		// le vecteur tout entier
 ~~~
 
 Avec des itérateurs
@@ -35,6 +38,9 @@ void listerPoints(Const_Iterateur first, Const_Iterateur last) {
       cout << endl;
    }
 }
+
+// appel
+listerPoints(dessin.begin(), dessin.end());   // des itérateurs sur le vecteur
 ~~~
 
 
