@@ -119,10 +119,8 @@ cout << "Wallis = " << 2/1 * 2/3 * 4/3 * 4/5 << endl;
 
 // vérifier s'il y a débordement pour a + b
 int a, b;
-if ( /* votre réponse ici */ )
-   cout << "débordement" << endl;
-else
-   cout << "pas de débordement" << endl;
+bool debordement = /* votre réponse ici */;
+cout << "debordement : " << boolalpha << debordement;
 ~~~
 
 <details>
@@ -131,11 +129,10 @@ else
 ~~~cpp
 // même test que la slide « Prévenir un dépassement » : selon le signe de b,
 // on compare a à la marge restante vers max() ou vers lowest()
-if ( (b >= 0 and a > numeric_limits<int>::max() - b) or
-     (b <  0 and a < numeric_limits<int>::lowest() - b) )
-   cout << "débordement" << endl;
-else
-   cout << "pas de débordement" << endl;
+bool debordement =
+     (b >= 0 and a > numeric_limits<int>::max() - b) or
+     (b <  0 and a < numeric_limits<int>::lowest() - b);
+cout << "debordement : " << boolalpha << debordement;
 ~~~
 
 </details>

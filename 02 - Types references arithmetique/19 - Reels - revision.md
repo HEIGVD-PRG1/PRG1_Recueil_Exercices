@@ -45,16 +45,14 @@ Priorité des opérateurs de gauche à droite<br>
 
 ~~~cpp
 // 3
-if (1 / 3. == 0.3333333333333333)
-   cout << "egalité" << endl;
-else
-   cout << "pas d'egalité" << endl;
+bool egalite = 1 / 3. == 0.3333333333333333;
+cout << "egalité : " << boolalpha << egalite;
 ~~~
 
 <details>
 <summary>Solution</summary>
 
-`pas d'egalité` car en réalité <br>
+`egalité : false` car en réalité <br>
 `0.33333333333333331483 == 0.3333333333333333`
 
 </details>
@@ -63,30 +61,24 @@ else
 // 4
 // coder ceci correctement de manière à résoudre ce problème correctement pour des double
 
-if ( /* votre réponse */ )
-   cout << "egalité" << endl;
-else
-   cout << "pas d'egalité" << endl;
+bool egalite = /* votre réponse */;
+cout << "egalité : " << boolalpha << egalite;
 ~~~
 
 <details>
 <summary>Solution</summary>
 
 ~~~cpp
-if ( fabs(1 / 3. - 0.3333333333333333) < 1e-9 )
-   cout << "egalité" << endl;
-else
-   cout << "pas d'egalité" << endl;
+bool egalite = abs(1 / 3. - 0.3333333333333333) < 1e-9;
+cout << "egalité : " << boolalpha << egalite;
 ~~~
 
 </details>
 
 ~~~cpp
 // 5
-if ( static_cast<double>(1 / 3.) == static_cast<float>(1 / 3.))
-   cout << "egalité" << endl;
-else
-   cout << "pas d'egalité" << endl;
+bool egalite = static_cast<double>(1 / 3.) == static_cast<float>(1 / 3.);
+cout << "egalité : " << boolalpha << egalite;
 ~~~
 
 <details>
