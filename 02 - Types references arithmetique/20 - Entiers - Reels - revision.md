@@ -70,18 +70,16 @@ cout << fixed << reel << endl;
 
 ~~~cpp
 // 5
-if (static_cast<float>(1234567890) == 1234567890)
-   cout << "egalité";
-else
-   cout << "pas d'égalité";
+bool egalite = static_cast<float>(1234567890) == 1234567890;
+cout << "egalité : " << boolaplpha << egalite;
 ~~~
 
 <details>
 <summary>Solution</summary>
 
-`egalité`
+`egalité : true`
 
-⚠️ même problème que précédement mais pour réaliser le teste d'égalité avec l'opérateur `==`, l'opérande de droite en `int` est convertie en `float`. Ainsi, le problème ne voit pas !!
+⚠️ même problème que précédement mais pour réaliser le teste d'égalité avec l'opérateur `==`, l'opérande de droite en `int` est convertie en `float`. Ainsi, le problème ne se voit pas !!
 
 </details>
 
