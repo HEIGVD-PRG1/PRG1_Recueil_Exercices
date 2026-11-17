@@ -1,4 +1,4 @@
-# Nbre en Chiffres
+# Nombre en chiffres
 
 Soit la déclaration
 
@@ -6,7 +6,7 @@ Soit la déclaration
 enum class Chiffre { ZERO,  UN,  DEUX,  TROIS,  QUATRE,  CINQ,  SIX,  SEPT,  HUIT,  NEUF };
 ~~~
 
-Ecrire le code nécessaire afin de traduire une valeur reçue en `int` en un `vector<Chiffre>` de chiffres correspondant.<br>
+Écrire le code nécessaire afin de traduire une valeur positive ou nulle reçue en `int` en un `vector<Chiffre>` de chiffres correspondants.<br>
 L'opérateur `<<` pour un `vector<Chiffre>` affiche les chiffres en toutes lettres.
 
 ~~~
@@ -17,17 +17,17 @@ cout << nbreToEnums(123);       // UN DEUX TROIS
 <summary>Solution</summary>
 
 ~~~cpp
-enum class Chiffre { ZERO,  UN,  DEUX,  TROIS,  QUATRE,  CINQ,  SIX,  SEPT,  HUIT,  NEUF };
-array      CHIFFRE {"ZERO","UN","DEUX","TROIS","QUATRE","CINQ","SIX","SEPT","HUIT","NEUF" };
+enum class             Chiffre { ZERO,  UN,  DEUX,  TROIS,  QUATRE,  CINQ,  SIX,  SEPT,  HUIT,  NEUF };
+const array<string, 10> CHIFFRE {"ZERO","UN","DEUX","TROIS","QUATRE","CINQ","SIX","SEPT","HUIT","NEUF" };
 
 ostream& operator<< (ostream& os, Chiffre chiffre) {
-   os << CHIFFRE[size_t(chiffre)];
+   os << CHIFFRE[static_cast<size_t>(chiffre)];
    return os;
 }
 
-ostream& operator<< (ostream& os, span<const Chiffre> tab) {
+ostream& operator<< (ostream& os, const vector<Chiffre>& tab) {
    for (size_t i = 0; i < tab.size(); ++i) {
-      if (i) cout << " ";
+      if (i != 0) os << " ";
       os << tab[i];
    }
    return os;
@@ -35,13 +35,18 @@ ostream& operator<< (ostream& os, span<const Chiffre> tab) {
 
 vector<Chiffre> nbreToEnums(int valeur) {
 
-   vector<Chiffre> result((size_t)log10(valeur) + 1);
-   size_t i = result.size() - 1;
+   // compter les chiffres de la valeur (au moins 1, pour 0)
+   size_t nbre_chiffres = 1;
+   for (int reste = valeur / 10; reste != 0; reste /= 10) {
+      ++nbre_chiffres;
+   }
 
-   do {
-      result.at(i--) = ( Chiffre(valeur % 10) );
+   // remplir depuis la fin : le chiffre des unités est valeur % 10
+   vector<Chiffre> result(nbre_chiffres);
+   for (size_t i = nbre_chiffres; i > 0; --i) {
+      result[i - 1] = static_cast<Chiffre>(valeur % 10);
       valeur /= 10;
-   } while (valeur);
+   }
 
    return result;
 }

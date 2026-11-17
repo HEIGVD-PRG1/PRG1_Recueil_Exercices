@@ -1,54 +1,51 @@
 # Nombre de jours dans un mois
 
-Soient les déclarations ci-dessous et la fonction `est_bissextile(..)` d'un exercice précédant.
+Soient la déclaration ci-dessous et la fonction `est_bissextile(..)` d'un exercice précédent.
 
 ~~~cpp
-using Jour  = uint8_t;
-using Mois  = uint8_t;
-using Annee = uint16_t;
-
 struct Date {
-   Jour  jour;
-   Mois  mois;
-   Annee annee;
+   int jour;
+   int mois;
+   int annee;
 };
 ~~~
 
 
-Ecrire une fonction qui retourne le nbre de jours pour un mois et une année donnés.
+Écrire une fonction qui retourne le nombre de jours pour un mois et une année donnés.
 
 La fonction reçoit en paramètre le *mois* et l'*année* et retourne le nombre de jours correspondant ou la valeur `0` en cas d'erreur.
 
-**NB** Utiliser un *enum* pour cette question
+**NB** Utiliser un `enum class` pour cette question.
 
 <details>
 <summary>Solutions</summary>
 
 ~~~cpp
-uint8_t nbre_jours_mois (Mois m, Annee a) {
+int nbre_jours_mois(int mois, int annee) {
 
-   enum Liste_Mois {JANVIER = 1, FEVRIER, MARS, AVRIL, MAI, JUIN, JUILLET,
-                    AOUT, SEPTEMBRE, OCTOBRE, NOVEMBRE, DECEMBRE};
+   enum class Liste_Mois {JANVIER = 1, FEVRIER, MARS, AVRIL, MAI, JUIN, JUILLET,
+                          AOUT, SEPTEMBRE, OCTOBRE, NOVEMBRE, DECEMBRE};
 
-   // NB : "enum" et non "enum class" => pas d'opérateur d'appartenance "::" dans le case
-   // si c'était "enum class T_Mois {..}" alors "case T_Mois::JANVIER : .."
+   // NB : avec un "enum class", les valeurs s'écrivent avec l'opérateur "::"
+   //      (Liste_Mois::JANVIER) et il n'y a pas de conversion automatique
+   //      depuis un int : on convertit le mois avec static_cast.
+   //      Un mois hors de 1..12 ne correspond à aucun case => default.
 
-   switch (m) {
-      case FEVRIER   : return 28 + est_bissextile(Date{1, m, a});
-      case JANVIER   :
-      case MARS      :
-      case MAI       :
-      case JUILLET   :
-      case AOUT      :
-      case OCTOBRE   :
-      case DECEMBRE  : return 31;
-      case AVRIL     :
-      case JUIN      :
-      case SEPTEMBRE :
-      case NOVEMBRE  : return 30;
-      default        : return 0;
+   switch (static_cast<Liste_Mois>(mois)) {
+      case Liste_Mois::FEVRIER   : return est_bissextile(Date{1, mois, annee}) ? 29 : 28;
+      case Liste_Mois::JANVIER   :
+      case Liste_Mois::MARS      :
+      case Liste_Mois::MAI       :
+      case Liste_Mois::JUILLET   :
+      case Liste_Mois::AOUT      :
+      case Liste_Mois::OCTOBRE   :
+      case Liste_Mois::DECEMBRE  : return 31;
+      case Liste_Mois::AVRIL     :
+      case Liste_Mois::JUIN      :
+      case Liste_Mois::SEPTEMBRE :
+      case Liste_Mois::NOVEMBRE  : return 30;
+      default                    : return 0;
    }
 }
 ~~~
 </details>
-

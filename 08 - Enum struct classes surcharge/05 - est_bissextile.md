@@ -1,5 +1,5 @@
 # struct - fonction est_bissextile
-Ecrire une fonction *est_bissextile* qui prend en paramètre une *Date* et retourne *true* si la date reçue en parmètre est en effet bissextile, *false* dans les cas contraires.
+Écrire une fonction *est_bissextile* qui prend en paramètre une *Date* et retourne *true* si l'année de la date reçue en paramètre est bissextile, *false* dans le cas contraire.
 
 Une année est bissextile si :<br>
    - l'année est divisible par 400; ou<br>
@@ -7,9 +7,9 @@ Une année est bissextile si :<br>
 
 ~~~cpp
 struct Date {
-   uint8_t  jour;
-   uint8_t  mois;
-   uint16_t annee;
+   int jour;
+   int mois;
+   int annee;
 };
 ~~~
 
@@ -24,7 +24,7 @@ struct Date {
 
 bool est_bissextile(const Date& d) {
    return d.annee % 400 == 0 or
-          (d.annee % 4 == 0 and d.annee % 100);
+          (d.annee % 4 == 0 and d.annee % 100 != 0);
 }
 
 ~~~

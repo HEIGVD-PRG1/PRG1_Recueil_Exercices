@@ -6,7 +6,7 @@ Soit la déclaration
 enum class Chiffre {ZERO, UN, DEUX, TROIS, QUATRE, CINQ, SIX, SEPT, HUIT, NEUF};
 ~~~
 
-Ecrire les fonctions nécessaires pour obtenir le résultat ci-après.
+Écrire les fonctions nécessaires pour obtenir le résultat ci-après.
 
 **NB** La gestion est circulaire : *..., HUIT, NEUF, ZERO, UN, ...*
 
@@ -23,7 +23,7 @@ afficher(b);
 
 ~~~cpp
 Chiffre next(Chiffre c) {
-   return Chiffre ( (int(c) + 1) % 10 );
+   return static_cast<Chiffre>((static_cast<int>(c) + 1) % 10);
 }
 
 void afficher(Chiffre c) {

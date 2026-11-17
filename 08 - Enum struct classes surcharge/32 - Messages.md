@@ -3,7 +3,7 @@ Implémenter une classe Message permettant de modéliser un message (email).
 Un message se caractérise par un expéditeur, un destinataire, une date-heure de création ainsi qu'un contenu (le texte du message).
 La classe doit mettre à disposition :
 - un constructeur qui prend en paramètres l'expéditeur et le destinataire et qui fixe automatiquement la date-heure courante. 
-Considérer qu'une fois celle-ci fixée, elle ne doit plus pouvoir être modifiée (champ avec attribut const).
+Considérer qu'une fois celle-ci fixée, elle ne doit plus pouvoir être modifiée (attribut privé sans setter).
 - une fonction membre qui permet d'ajouter une ligne de texte au contenu du message
 - une fonction membre toString qui convertit l'objet message en une unique chaîne de caractères comme suit "From : xxx\nTo : yyy\nDate : zzz\n…"
 - une fonction membre qui permet d'afficher à l'écran le message.
@@ -66,8 +66,6 @@ Pierre
 #include <string>
 #include <vector>
 
-using TexteMessage = std::vector<std::string>;
-
 class Message {
 public:
 
@@ -84,12 +82,13 @@ public:
    void afficher() const;
    
    // Les accesseurs viendraient s'insérer ici
-   
+   // (pas de setter pour dateCreation : elle ne peut pas être modifiée)
+
 private:
-   const std::time_t dateCreation; // date-heure de création du message
-   std::string expediteur;         // expéditeur du message 
-   std::string destinataire;       // destinataire du message
-   TexteMessage texteMessage;      // l'ensemble des lignes constituant le message
+   std::time_t dateCreation;              // date-heure de création du message, fixée par le constructeur
+   std::string expediteur;                // expéditeur du message
+   std::string destinataire;              // destinataire du message
+   std::vector<std::string> texteMessage; // l'ensemble des lignes constituant le message
 };
 
 #endif

@@ -35,15 +35,15 @@ int* const ptr_i_2 = &i;
 <details>
 <summary>Solution</summary>
 
-| # | Instruction           | Correcte | Explication                                                                    |  i  |  j  |
-|---| --------------------- | ---------| ------------------------------------------------------------------------------ | ---:| ---:|
-| 1 | `*ptr_i = 15;`        |   oui    | `i` est modifiable                                                             |  15 |  10 |
-| 2 | `int *ptr_j_1 = &j;`  |   non    | on ne peux pas initialiser un pointeur `int` avec un rvalue de type `const int`|     |     |
-| 3 | `ptr_j = ptr_i;`      |   oui    | `ptr_j` est modifiable                                                         |   5 |  10 |
-| 4 | `*ptr_i_1 = 25;`      |   non    | un pointeur vers une valeur constante                                          |     |     |
-| 5 | `*ptr_i_2 = 30;`      |   oui    | const pointer vers non const lvalue                                            |  30 |  10 |
-| 6 | `ptr_i_1 = &j;`       |   oui    | `ptr_i_1` est modifiable (non const)                                          |   5 |  10 |
-| 7 | `ptr_i_2 = &j;`       |   non    | `ptr_i_2` est un pointeur constant et serait lié à une constante               |     |     |
+| # | Instruction           | Correcte | Explication                                                                                                   |  i  |  j  |
+|---| --------------------- | ---------| ------------------------------------------------------------------------------------------------------------- | ---:| ---:|
+| 1 | `*ptr_i = 15;`        |   oui    | `ptr_i` pointe vers `i`, qui est modifiable                                                                   |  15 |  10 |
+| 2 | `int *ptr_j_1 = &j;`  |   non    | `&j` est l'adresse d'un `const int` : un `int*` permettrait de modifier `j`, qui est constant                 |     |     |
+| 3 | `ptr_j = ptr_i;`      |   oui    | `ptr_j` n'est pas un pointeur constant, il peut pointer vers `i` (sans pouvoir le modifier)                   |   5 |  10 |
+| 4 | `*ptr_i_1 = 25;`      |   non    | `ptr_i_1` est un pointeur vers un `const int` : la valeur pointée ne peut pas être modifiée par ce pointeur   |     |     |
+| 5 | `*ptr_i_2 = 30;`      |   oui    | `ptr_i_2` est un pointeur constant, mais la valeur pointée (`i`) est modifiable                               |  30 |  10 |
+| 6 | `ptr_i_1 = &j;`       |   oui    | `ptr_i_1` n'est pas un pointeur constant : il peut pointer vers `j`, qui ne sera pas modifié                  |   5 |  10 |
+| 7 | `ptr_i_2 = &j;`       |   non    | `ptr_i_2` est un pointeur constant : il ne peut pas pointer ailleurs (de plus, `&j` est un `const int*`)      |     |     |
 
 
 </details>

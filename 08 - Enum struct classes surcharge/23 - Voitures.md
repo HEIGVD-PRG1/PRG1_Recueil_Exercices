@@ -3,10 +3,10 @@
 - capacité du réservoir, 
 - consommation moyenne, 
 - et le nombre de litres actuellement dans le réservoir. 
-- La classe devrait avoir une méthode effectuerTrajet qui prend en paramètre la distance à parcourir en kilomètres et retourne le coût du trajet en carburant. Assurez-vous que le réservoir est mis à jour correctement après chaque trajet.
+- La capacité du réservoir et la consommation moyenne sont fixées à la construction : elles ont un getter mais pas de setter.
+- La classe devrait avoir une méthode effectuerTrajet qui prend en paramètre la distance à parcourir en kilomètres et le prix de l'essence (en Frs par litre), et retourne le coût du trajet en carburant. Assurez-vous que le réservoir est mis à jour correctement après chaque trajet.
 
-- Le prix de l'essence est le même pour toutes les voitures.
-- La classe devrait également avoir une méthode getPrixEssence pour obtenir le prix actuel de l'essence, ainsi qu'une méthode setPrixEssence pour mettre à jour ce prix.
+- Le prix de l'essence est le même pour toutes les voitures : ce n'est pas un attribut de la classe, il est conservé dans le `main` et passé à effectuerTrajet.
 
 - Fournissez également des fonctions auxiliaires afficherPrixEssence, afficherVoiture, et afficherCoutTrajet qui affichent respectivement le prix de l'essence, les détails de la voiture, et le coût du trajet.
 
@@ -27,17 +27,18 @@ using namespace std;
 
 int main() {
 
-    afficherPrixEssence(Voiture::getPrixEssence());
-        
-    Voiture::setPrixEssence(1.95);
-    afficherPrixEssence(Voiture::getPrixEssence());   
+    double prixEssence = 1.7;   // en Frs par litre
+    afficherPrixEssence(prixEssence);
+
+    prixEssence = 1.95;
+    afficherPrixEssence(prixEssence);
 
     Voiture v(52, 6.7);
 
-    afficherVoiture(v);   
-    afficherCoutTrajet(v.effectuerTrajet(1000));
     afficherVoiture(v);
-    afficherCoutTrajet(v.effectuerTrajet(200));
+    afficherCoutTrajet(v.effectuerTrajet(1000, prixEssence));
+    afficherVoiture(v);
+    afficherCoutTrajet(v.effectuerTrajet(200, prixEssence));
     afficherVoiture(v);
 
     return EXIT_SUCCESS;
@@ -82,19 +83,15 @@ public:
    unsigned getCapaciteReservoir() const { return capaciteReservoir; }
    double getConsommationMoyenne() const { return consommationMoyenne; }
    double getNbLitresDansReservoir() const { return nbLitresDansReservoir; }
-   static double getPrixEssence() { return prixEssence; }
 
-   static void setPrixEssence(double prix);
-
-   double effectuerTrajet(double nbKm); // en valeur de retour : le coût du trajet
+   // prixEssence en Frs par litre ; en valeur de retour : le coût du trajet
+   double effectuerTrajet(double nbKm, double prixEssence);
 private:
-   static double prixEssence;     // en Frs
+   // fixés à la construction : privés et sans setter, ils ne peuvent pas être modifiés
    unsigned capaciteReservoir;    // en litres
    double consommationMoyenne;    // litres aux 100 km
    double nbLitresDansReservoir;  // nb de litres actuellement dans le réservoir
 };
-
-double Voiture::prixEssence = 1.7;
 
 Voiture::Voiture(unsigned capaciteReservoir, double consommationMoyenne)
         : capaciteReservoir(capaciteReservoir),
@@ -102,16 +99,12 @@ Voiture::Voiture(unsigned capaciteReservoir, double consommationMoyenne)
           nbLitresDansReservoir(capaciteReservoir) {
 }
 
-double Voiture::effectuerTrajet(double nbKm) {
+double Voiture::effectuerTrajet(double nbKm, double prixEssence) {
    const double consommation = nbKm * consommationMoyenne / 100;
    nbLitresDansReservoir -= consommation;
    while (nbLitresDansReservoir <= 0)
       nbLitresDansReservoir += capaciteReservoir;
    return consommation * prixEssence;
-}
-
-void Voiture::setPrixEssence(double prix) {
-   prixEssence = prix;
 }
 
 void afficherPrixEssence(double prix) {
@@ -136,17 +129,18 @@ void afficherCoutTrajet(double montant) {
 
 int main() {
 
-   afficherPrixEssence(Voiture::getPrixEssence());
+   double prixEssence = 1.7;   // en Frs par litre
+   afficherPrixEssence(prixEssence);
 
-   Voiture::setPrixEssence(1.95);
-   afficherPrixEssence(Voiture::getPrixEssence());
+   prixEssence = 1.95;
+   afficherPrixEssence(prixEssence);
 
    Voiture v(52, 6.7);
 
    afficherVoiture(v);
-   afficherCoutTrajet(v.effectuerTrajet(1000));
+   afficherCoutTrajet(v.effectuerTrajet(1000, prixEssence));
    afficherVoiture(v);
-   afficherCoutTrajet(v.effectuerTrajet(200));
+   afficherCoutTrajet(v.effectuerTrajet(200, prixEssence));
    afficherVoiture(v);
 }
 ~~~

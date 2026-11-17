@@ -1,11 +1,11 @@
-# Operateurs sur hh:mm 🕔
+# Opérateurs sur hh:mm 🕔
 
-Soient la déclaration et le code suivant
+Soient la déclaration et le code suivants
 
 ~~~cpp
 struct HeureMinute {
-   int8_t heure;
-   int8_t minute;
+   int heure;
+   int minute;
 };
 
 HeureMinute saisie(const string& msg) {
@@ -24,29 +24,23 @@ HeureMinute saisie(const string& msg) {
 HeureMinute hm1 = {12, 34};
 HeureMinute hm2 = {21, 43};
 
-cout << boolalpha;
-cout << hm1 << " <  " << hm2 << "  : " << (hm1 <  hm2) << endl;
-cout << hm1 << " >  " << hm2 << "  : " << (hm1 >  hm2) << endl;
-cout << hm1 << " <= " << hm2 << "  : " << (hm1 <= hm2) << endl;
-cout << hm1 << " >= " << hm2 << "  : " << (hm1 >= hm2) << endl;
-cout << hm1 << " == " << hm2 << "  : " << (hm1 == hm2) << endl;
-cout << hm1 << " != " << hm2 << "  : " << (hm1 != hm2) << endl;
+cout << hm1 << " <  " << hm2 << "  : " << (hm1 <  hm2 ? "true" : "false") << endl;
+cout << hm1 << " >  " << hm2 << "  : " << (hm1 >  hm2 ? "true" : "false") << endl;
+cout << hm1 << " <= " << hm2 << "  : " << (hm1 <= hm2 ? "true" : "false") << endl;
+cout << hm1 << " >= " << hm2 << "  : " << (hm1 >= hm2 ? "true" : "false") << endl;
+cout << hm1 << " == " << hm2 << "  : " << (hm1 == hm2 ? "true" : "false") << endl;
+cout << hm1 << " != " << hm2 << "  : " << (hm1 != hm2 ? "true" : "false") << endl;
 
 cout << hm1 << " +  " << hm2 << "  : " << (hm1 +  hm2) << endl;
 cout << hm1 << " +  " << 44  << "     : " << (hm1 +  44 ) << endl;
 cout << 44  << "    +  " << hm1 << "  : " << (44  +  hm1) << endl;
-cout << hm1 << " += "  << 2 << "      : " << (hm1+=2 )    << endl;
-
-cout << "++" << hm1  << "\t\t: " << ++hm1 << endl;
-cout << hm1  << "++" << "\t\t: " << hm1++ << endl;
-cout << hm1 << endl;
 
 cout << endl;
 HeureMinute hm3 = saisie("heure [hh:mm]: ");
 cout << "votre saisie : " << hm3 << endl;
 ~~~
 
-Ecrire le code nécessaire afin que le code produise ceci.
+Écrire le code nécessaire afin que le code produise ceci.
 
 ~~~
 12:34 <  21:43  : true
@@ -58,10 +52,6 @@ Ecrire le code nécessaire afin que le code produise ceci.
 12:34 +  21:43  : 34:17
 12:34 +  44     : 13:18
 44    +  12:34  : 13:18
-12:34 += 2      : 12:36
-++12:36         : 12:37
-12:37++         : 12:37
-12:38
 
 heure [hh:mm]: 12 34
 heure [hh:mm]: 12:34
@@ -101,55 +91,35 @@ bool operator!= (const HeureMinute& lhs, const HeureMinute& rhs) {
 }
 
 HeureMinute operator+ (const HeureMinute& lhs, const HeureMinute& rhs) {
-   return { int8_t(lhs.heure + rhs.heure + (lhs.minute + rhs.minute) / 60),
-            int8_t((lhs.minute + rhs.minute) % 60)};
+   return { lhs.heure + rhs.heure + (lhs.minute + rhs.minute) / 60,
+            (lhs.minute + rhs.minute) % 60 };
 }
 
-HeureMinute& operator+= (HeureMinute& hm, int8_t minute) {
-   hm = {int8_t(hm.heure + (hm.minute + minute) / 60),
-          int8_t((hm.minute + minute) % 60)};
-   return hm;
+HeureMinute operator+ (const HeureMinute& hm, int minute) {
+   return hm + HeureMinute{0, minute};
 }
 
-HeureMinute operator+ (HeureMinute hm, int8_t minute) {
-   return hm += minute;
-}
-
-HeureMinute operator+ (int8_t minute, HeureMinute hm) {
-   return hm += minute;
-}
-
-HeureMinute& operator++ (HeureMinute& hm) {
-   return hm += 1;
-}
-
-HeureMinute operator++ (HeureMinute& hm, int) {
-   HeureMinute tmp = hm;
-   ++hm;
-   return tmp;
+HeureMinute operator+ (int minute, const HeureMinute& hm) {
+   return hm + minute;
 }
 
 ostream& operator<< (ostream& os, const HeureMinute& h) {
-   return os << +h.heure << ":" << +h.minute;
+   return os << h.heure << ":" << h.minute;
 }
 
 istream& operator>> (istream& is, HeureMinute& h) {
    char c;
-   int  valeur; // sinon lecture d'un char avec int8_t
-   is >> valeur;
-   h.heure = valeur;
+   is >> h.heure;
 
+   // is.setstate(ios::failbit) met le flux en état d'échec (états du flux, ch. 7) :
+   // l'appelant le détecte avec cin.fail(), comme pour une saisie de type incorrect.
    is >> c;
    if (c != ':') {
       is.setstate(ios::failbit);
    }
 
-   is >> valeur;
-   h.minute = valeur;
-
+   is >> h.minute;
    if (h.minute >= 60) {
-      cout << h.minute << endl;
-      cout << "fail 60" << endl;
       is.setstate(ios::failbit);
    }
 
@@ -166,29 +136,19 @@ istream& operator>> (istream& is, HeureMinute& h) {
 <details>
 <summary>Solution</summary>
 
-En profitant de la comparaison lexicographique des structures comme 
+En profitant de la comparaison lexicographique des structures comme
 *vector*, *array*, *pair*, etc ... 👍
 
-Choisir toutefois la structure la plus économe en mémoire (compléxité spatiale).
+Choisir toutefois la structure la plus économe en mémoire (complexité spatiale).
 
 ~~~cpp
 bool operator< (const HeureMinute& lhs, const HeureMinute& rhs) {
-   return pair{lhs.heure, lhs.minute} < pair{rhs.heure, rhs.minute};
+   return pair<int, int>{lhs.heure, lhs.minute} < pair<int, int>{rhs.heure, rhs.minute};
 }
 
 bool operator== (const HeureMinute& lhs, const HeureMinute& rhs) {
-   return pair{lhs.heure, lhs.minute} == pair{rhs.heure, rhs.minute};
+   return pair<int, int>{lhs.heure, lhs.minute} == pair<int, int>{rhs.heure, rhs.minute};
 }
-~~~
-
-Nous verrons dans le chapitre consacré aux classes que l'on peut encore plus simplifier l'écriture des opérateurs de comparaison par l'utilisation de l'opérateur à 3 voies:
-
-~~~cpp
-struct HeureMinute {
-   int8_t heure;
-   int8_t minute;
-   auto operator<=>(const HeureMinute& rhs) const = default;
-};
 ~~~
 
 

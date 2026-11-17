@@ -1,6 +1,6 @@
 # Stack
 
-Ecrire l'implémentation d'une pile de *n* entiers (connu à la compilation) sur la base d'un `array`.
+Écrire l'implémentation d'une pile de *n* entiers (connu à la compilation) sur la base d'un `array`.
 
 
 Une pile contient
@@ -8,7 +8,7 @@ Une pile contient
 - un entier `size` qui indique combien d'éléments sont stockés dans la pile, et donc aussi l'indice de son sommet
 - les `data`, ici `std::array<int, 10>`
 
-Le code ci-après doit produire le résulat indiqué
+Le code ci-après doit produire le résultat indiqué
 
 ~~~cpp
 int main() {
@@ -20,7 +20,8 @@ int main() {
    cout << endl;
 
    while (not full(s)) {
-      push(s, i*=2);
+      i *= 2;
+      push(s, i);
    }
 
    cout << "top  : " << top(s)  << endl;
@@ -90,7 +91,8 @@ int main() {
    cout << endl;
 
    while (not full(s)) {
-      push(s, i*=2);
+      i *= 2;
+      push(s, i);
    }
 
    cout << "top  : " << top(s) << endl;
@@ -144,7 +146,7 @@ void display(const Stack& s) {
 
    cout << "[";
    for (size_t i = 0; i < s.size; ++i) {
-      if(i) cout << ", ";
+      if (i != 0) cout << ", ";
       cout << s.data[i];
    }
    cout << "]" << endl;
