@@ -1,25 +1,27 @@
-# Contrôler et tester les saisies, Gestionnaire d'étudiants
+# Contrôler et tester les saisies, gestionnaire d'étudiants
 
-Modifier le programme de l'exercice précédent, 03-02 "Gestionnaire d'étudiants" afin d'y ajouter un contrôle de l'état du flux cin et les valeurs saisies par l'utilisateur.
+Modifier le programme de l'exercice précédent (04, « Gestionnaire d'étudiants ») afin d'y ajouter un contrôle de l'état du flux `cin` et des valeurs saisies par l'utilisateur.
 
-L'age de l'étudiant est un entier compris entre 1 et 100.
-La note est une valeure réelle comprise entre 1 et 6.
+- L'âge de l'étudiant.e est un entier compris entre 1 et 100.
+- Une note est une valeur réelle comprise entre 1 et 6.
+- Une saisie qui contient autre chose que la valeur attendue (par exemple `4.9` pour l'âge ou `5abc` pour une note) est invalide.
+- Si la saisie se termine (Ctrl+D), le programme affiche un message d'erreur et s'arrête.
 
-Un exemple de l'exécution  du programme avec les nouvelles fonctionnalités :
+Un exemple de l'exécution du programme avec les nouvelles fonctionnalités :
 
 ~~~
-Entrez le nom de l'étudiant : Fouad Hanna
-Entrez l'âge de l'étudiant : -5
+Entrez le nom de l'étudiant.e : Fouad Hanna
+Entrez l'âge de l'étudiant.e : -5
 Saisie invalide. Veuillez entrer un entier entre 1 et 100
 f
 Saisie invalide. Veuillez entrer un entier entre 1 et 100
 21
-Entrez la note en mathématiques (max. 6): -2
+Entrez la note en mathématiques (max. 6) : -2
 Saisie invalide. Veuillez entrer une valeur entre 1 et 6
 s
 Saisie invalide. Veuillez entrer une valeur entre 1 et 6
 4.9
-Entrez la note en PRG1 (max. 6): 33
+Entrez la note en PRG1 (max. 6) : 33
 Saisie invalide. Veuillez entrer une valeur entre 1 et 6
 ee
 Saisie invalide. Veuillez entrer une valeur entre 1 et 6
@@ -32,9 +34,7 @@ Moyenne : 5.25
 Résultat : Admis
 ~~~
 
-Note: privilégier l'utilisation des fonctions pour organiser le code.  
-
-
+Note : privilégier l'utilisation des fonctions pour organiser le code.
 
 <details>
 <summary>Solution</summary>
@@ -47,79 +47,98 @@ Note: privilégier l'utilisation des fonctions pour organiser le code.
 #include <limits>
 #include <sstream>
 
-using namespace std;
-
 //------------------------------------------------------------
-void afficher_ligne(const string& s_col1,
-                    const string& s_col2,
-                    const string& s_col3,
-                    const string& s_col4,
-                    const string& s_col5) {
+// Affiche une ligne du tableau, suivie d'une ligne de tirets
+void afficher_ligne(const std::string& s_col1,
+                    const std::string& s_col2,
+                    const std::string& s_col3,
+                    const std::string& s_col4,
+                    const std::string& s_col5) {
 
-    const int w_col1 = 15;
-    const int w_col2 = 6;
-    const int w_col3 = 11;
-    const int w_col4 = 14;
-    const int w_col5 = 9;
+    const int w_col1  = 15;
+    const int w_col2  = 6;
+    const int w_col3  = 11;
+    const int w_col4  = 14;
+    const int w_col5  = 9;
     const int w_total = w_col1 + w_col2 + w_col3 + w_col4 + w_col5;
 
-    cout << setfill(' ')
-         << left  << setw(w_col1) << s_col1
-         << right << setw(w_col2) << s_col2
-         << right << setw(w_col3) << s_col3
-         << right << setw(w_col4) << s_col4
-         << right << setw(w_col5) << s_col5
-         << endl;
+    std::cout << std::setfill(' ')
+              << std::left  << std::setw(w_col1) << s_col1
+              << std::right << std::setw(w_col2) << s_col2
+              << std::setw(w_col3) << s_col3
+              << std::setw(w_col4) << s_col4
+              << std::setw(w_col5) << s_col5
+              << '\n';
 
-    cout << right << setw(w_total) << setfill('-') << "" << "\n";
+    std::cout << std::setw(w_total) << std::setfill('-') << "" << '\n';
 }
 
 //------------------------------------------------------------
-void afficher_resume(double moyenne, bool admis){
-    cout << "Moyenne : " << moyenne << endl;
-    cout << "Résultat : " << (admis ? "Admis" : "Non admis") << endl;
+void afficher_resume(double moyenne, bool admis) {
+    std::cout << "Moyenne : "  << moyenne                         << '\n';
+    std::cout << "Résultat : " << (admis ? "Admis" : "Non admis") << '\n';
 }
 
 //------------------------------------------------------------
-string lire_string(const string& message) {
-    cout << message;
-    string s;
-    getline(cin, s);
+// Arrête le programme si la saisie est terminée (Ctrl+D),
+// sinon la boucle de saisie tournerait sans fin
+void verifier_fin_saisie() {
+    if (std::cin.eof()) {
+        std::cerr << "Erreur : fin de saisie inattendue.\n";
+        std::exit(EXIT_FAILURE);
+    }
+}
+
+//------------------------------------------------------------
+std::string lire_string(const std::string& message) {
+    std::cout << message;
+    std::string s;
+    std::getline(std::cin, s);
+    verifier_fin_saisie();
     return s;
 }
 
 //------------------------------------------------------------
-int lire_int(const string& message, int min, int max) {
-    cout << message;
+int lire_int(const std::string& message, int min, int max) {
+    std::cout << message;
 
-    int i;
-    bool valid;
-    do{
-        valid = (cin >> i) && i >= min && i <= max;
-        if(!valid){
-            cin.clear();
-            cout << "Saisie invalide. Veuillez entrer un entier entre " << min << " et " << max << "\n";
+    int  i;
+    bool valide;
+    do {
+        std::cin >> i;
+        verifier_fin_saisie();
+
+        // Valide si la lecture a réussi, si rien ne suit la valeur sur la ligne
+        // (sinon "4.9" serait lu comme 4) et si la valeur est dans les bornes
+        valide = !std::cin.fail() && std::cin.peek() == '\n' && i >= min && i <= max;
+        if (!valide) {
+            std::cin.clear();
+            std::cout << "Saisie invalide. Veuillez entrer un entier entre " << min << " et " << max << '\n';
         }
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
-    }while(!valid);
+        // Vider le reste de la ligne, y compris le '\n'
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    } while (!valide);
 
     return i;
 }
 
 //------------------------------------------------------------
-double lire_double(const string& message, double min, double max) {
-    cout << message;
+double lire_double(const std::string& message, double min, double max) {
+    std::cout << message;
 
     double d;
-    bool valid;
-    do{
-        valid = (cin >> d) && d >= min && d <= max;
-        if(!valid){
-            cin.clear();
-            cout << "Saisie invalide. Veuillez entrer une valeur entre " << min << " et " << max << "\n";
+    bool   valide;
+    do {
+        std::cin >> d;
+        verifier_fin_saisie();
+
+        valide = !std::cin.fail() && std::cin.peek() == '\n' && d >= min && d <= max;
+        if (!valide) {
+            std::cin.clear();
+            std::cout << "Saisie invalide. Veuillez entrer une valeur entre " << min << " et " << max << '\n';
         }
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
-    }while(!valid);
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    } while (!valide);
 
     return d;
 }
@@ -132,30 +151,33 @@ double calculer_moyenne(double note_math, double note_prg1) {
 //------------------------------------------------------------
 bool est_admis(double moyenne) {
     const double min_admis = 3.8;
-    return (moyenne >= min_admis);
+    return moyenne >= min_admis;
 }
 
 //------------------------------------------------------------
-string double_to_str(double value){
-    stringstream out_str;
+// Convertit un nombre réel en texte, avec le même affichage que cout
+std::string double_to_str(double value) {
+    std::ostringstream out_str;
     out_str << value;
     return out_str.str();
 }
 
 //------------------------------------------------------------
 int main() {
-    const int age_min     = 1; const int age_max = 100;
-    const double note_min = 1; const double note_max = 6;
+    const int    age_min  = 1;
+    const int    age_max  = 100;
+    const double note_min = 1.0;
+    const double note_max = 6.0;
 
-    string nom       = lire_string("Entrez le nom de l'étudiant : ");;
-    int age          = lire_int("Entrez l'âge de l'étudiant : ", age_min, age_max);
-    double note_math = lire_double("Entrez la note en mathématiques (max. 6): ", note_min, note_max);
-    double note_prg1 = lire_double("Entrez la note en PRG1 (max. 6): ", note_min, note_max);
-    double moyenne   = calculer_moyenne(note_math, note_prg1);
-    bool admis       = est_admis(moyenne);
+    std::string nom       = lire_string("Entrez le nom de l'étudiant.e : ");
+    int         age       = lire_int   ("Entrez l'âge de l'étudiant.e : ", age_min, age_max);
+    double      note_math = lire_double("Entrez la note en mathématiques (max. 6) : ", note_min, note_max);
+    double      note_prg1 = lire_double("Entrez la note en PRG1 (max. 6) : ", note_min, note_max);
+    double      moyenne   = calculer_moyenne(note_math, note_prg1);
+    bool        admis     = est_admis(moyenne);
 
     afficher_ligne("Nom", "Age", "Note Math", "Note PRG1", "Admis");
-    afficher_ligne(nom, to_string(age), double_to_str(note_math), double_to_str(note_prg1), admis ? "Oui" : "Non");
+    afficher_ligne(nom, std::to_string(age), double_to_str(note_math), double_to_str(note_prg1), admis ? "Oui" : "Non");
     afficher_resume(moyenne, admis);
 
     return EXIT_SUCCESS;

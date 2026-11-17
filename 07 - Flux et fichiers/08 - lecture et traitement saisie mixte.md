@@ -1,33 +1,37 @@
-## Lecture valeur numérique ou texte
+## Lecture et traitement d'une saisie mixte
 
 ### Objectif
-- Lire plusieurs données de natures différentes d'une même ligne de saisie et traiter ces donnles.
+- Lire plusieurs données de natures différentes sur une même ligne de saisie et traiter ces données.
 
-### A faire
-Ecrire un programme qui demande à l'utilisateur de saisir sur une même ligne les informations suivantes
-- type d'appareil
-- nombre de passagers
-- durée du vol
-- destination
+### À faire
+Écrire un programme qui demande à l'utilisateur de saisir sur une même ligne les informations suivantes :
+- le type d'appareil
+- le nombre de passagers (entier)
+- la durée du vol en heures (réel)
+- la destination (peut contenir des espaces)
 
-Les informations données sur une seule ligne et séparées par des `,`
+Les informations sont données sur une seule ligne et séparées par des virgules (`,`).
 
-### indication
-Utiliser des `stringstream` pour ce problème.
+Si la saisie ne contient pas les quatre informations, ou si le nombre de passagers ou la durée ne sont pas des nombres valides, le programme affiche un message d'erreur et s'arrête.
+
+### Indication
+Utiliser des `std::istringstream` pour ce problème.
 
 ### Exemples d'utilisation
 
 ~~~
-indiquer sur une seule ligne séparé par des ","
-- type d'appareil
-- nbre de passagers
-- le temps de vol
+Indiquer sur une seule ligne, séparés par des virgules :
+- le type d'appareil
+- le nombre de passagers
+- la durée du vol (en heures)
 - la destination
-exemple : PC12 3 105 Paris
+exemple : PC12,3,1.2,Paris
+
+PC12,3,1.2,Paris
 
 Avion       : PC12
 Passagers   : 3
-Duree       : 1.2 heure
+Durée       : 1.2 h
 Destination : Paris
 ~~~
 
@@ -38,46 +42,72 @@ Destination : Paris
 #include <iostream>
 #include <sstream>
 #include <string>
-#include <iomanip>
+#include <cstdlib>
 
-using namespace std;
+//------------------------------------------------------------
+// Convertit un texte en entier.
+// Retourne false si le texte n'est pas un entier valide (ex. "3x").
+bool convertir(const std::string& texte, int& valeur) {
+    std::istringstream flux(texte);
+    // La lecture doit réussir et il ne doit rester que des espaces
+    return (flux >> valeur) && (flux >> std::ws).eof();
+}
+
+//------------------------------------------------------------
+// Même chose pour un nombre réel
+bool convertir(const std::string& texte, double& valeur) {
+    std::istringstream flux(texte);
+    return (flux >> valeur) && (flux >> std::ws).eof();
+}
 
 //------------------------------------------------------------
 int main() {
+    std::cout << "Indiquer sur une seule ligne, séparés par des virgules :\n";
+    std::cout << "- le type d'appareil\n";
+    std::cout << "- le nombre de passagers\n";
+    std::cout << "- la durée du vol (en heures)\n";
+    std::cout << "- la destination\n";
+    std::cout << "exemple : PC12,3,1.2,Paris\n\n";
 
-   cout << "indiquer sur une seule ligne séparé par des \",\"" << endl;
-   cout << "- type d'appareil"          << endl;
-   cout << "- nbre de passagers"        << endl;
-   cout << "- le temps de vol"          << endl;
-   cout << "- la destination"           << endl;
-   cout << "exemple : PC12 3 105 Paris" << endl;
-   cout << endl;
+    // Lire toute la ligne saisie par l'utilisateur
+    std::string ligne;
+    std::getline(std::cin, ligne);
+    std::istringstream flux(ligne);
 
-   string ligne = "PC12,3,1.2,Paris";
-   stringstream ss(ligne);
+    std::string appareil;
+    std::string passagers_str;
+    std::string duree_str;
+    std::string destination;
 
-   string appareil;
-   string passagersStr;
-   string dureeVolStr;
-   string destination;
+    // Extraction des données séparées par des virgules.
+    // flux >> std::ws retire les espaces éventuels après chaque virgule.
+    // La destination est lue jusqu'à la fin de la ligne.
+    bool lecture_ok = std::getline(flux >> std::ws, appareil, ',')
+                   && std::getline(flux, passagers_str, ',')
+                   && std::getline(flux, duree_str, ',')
+                   && std::getline(flux >> std::ws, destination);
 
-   // Extraction des données séparées par des virgules
-   getline(ss, appareil, ',');
-   getline(ss, passagersStr, ',');
-   getline(ss, dureeVolStr, ',');
-   getline(ss, destination, ',');
+    if (!lecture_ok) {
+        std::cerr << "Erreur : il faut quatre informations séparées par des virgules.\n";
+        return EXIT_FAILURE;
+    }
 
-   // Conversion des chaînes en nombres
-   int    passagers = stoi(passagersStr);
-   double dureeVol  = stod(dureeVolStr);
+    // Conversion des chaînes en nombres
+    int    passagers;
+    double duree;
+    if (!convertir(passagers_str, passagers) || !convertir(duree_str, duree)) {
+        std::cerr << "Erreur : le nombre de passagers ou la durée n'est pas valide.\n";
+        return EXIT_FAILURE;
+    }
 
-   // Affichage
-   cout << "Avion       : " << appareil  << "\n";
-   cout << "Passagers   : " << passagers << "\n";
-   cout << "Duree       : " << dureeVol  << " heure\n";
-   cout << "Destination : " << destination << "\n";
+    // Affichage
+    std::cout << '\n';
+    std::cout << "Avion       : " << appareil    << '\n';
+    std::cout << "Passagers   : " << passagers   << '\n';
+    std::cout << "Durée       : " << duree       << " h\n";
+    std::cout << "Destination : " << destination << '\n';
 
-   return EXIT_SUCCESS;
+    return EXIT_SUCCESS;
 }
 ~~~
 

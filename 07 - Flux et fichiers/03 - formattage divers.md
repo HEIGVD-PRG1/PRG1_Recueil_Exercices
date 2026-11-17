@@ -1,52 +1,54 @@
-# Formattage cout, effet des fonctions de formatage
+# Formatage avec cout, effet des fonctions de formatage
 
-## Concepts tested
-- std::setw()
-- std::setfill()
-- std::left
-- std::right
-- std::internal
-- std::showpos
-- std::noshowpos
-- Negative numbers
-- Persistence of stream formatting settings
+## Notions testées
+- `std::setw()`
+- `std::setfill()`
+- `std::left`
+- `std::right`
+- `std::internal`
+- `std::showpos`
+- `std::noshowpos`
+- Nombres négatifs
+- Persistance des réglages de formatage du flux
 
-Quel sera le résultat de l'exécution do programme suivant :
+Quel sera le résultat de l'exécution du programme suivant :
 
 ~~~cpp
 #include <iostream>
 #include <iomanip>
-
-using namespace std;
+#include <cstdlib>
 
 int main() {
-   int num = -42;
+    int num = -42;
 
-   cout << " 1) " << setfill('x') << setw(6) << left      << num << endl;
-   cout << " 2) " << setfill('x') << setw(6) << right     << num << endl;
-   cout << " 3) " << setfill('x') << setw(6) << internal  << num << endl;
-   cout << " 4) " << showpos      << setw(6) << right     << num << endl;
-   cout << " 5) " << noshowpos    << setw(6) << right     << num << endl;
-   cout << " 6) " << setfill('0') << setw(8) << right     << num << endl;
-   cout << " 7) " << setfill('.') << setw(8) << left      << num << endl;
+    std::cout << " 1) " << std::setfill('x') << std::setw(6) << std::left     << num << '\n';
+    std::cout << " 2) " << std::setfill('x') << std::setw(6) << std::right    << num << '\n';
+    std::cout << " 3) " << std::setfill('x') << std::setw(6) << std::internal << num << '\n';
+    std::cout << " 4) " << std::showpos      << std::setw(6) << std::right    << num << '\n';
+    std::cout << " 5) " << std::noshowpos    << std::setw(6) << std::right    << num << '\n';
+    std::cout << " 6) " << std::setfill('0') << std::setw(8) << std::right    << num << '\n';
+    std::cout << " 7) " << std::setfill('.') << std::setw(8) << std::left     << num << '\n';
 
-   return EXIT_SUCCESS;
-}~~~
+    return EXIT_SUCCESS;
+}
+~~~
 
 <details>
 <summary>Solution</summary>
 
 ~~~
-1) -42xxx
-2) xxx-42
-3) -xxx42
-4) xxx-42
-5) xxx-42
-6) 00000-42
-7) -42.....
-
+ 1) -42xxx
+ 2) xxx-42
+ 3) -xxx42
+ 4) xxx-42
+ 5) xxx-42
+ 6) 00000-42
+ 7) -42.....
 ~~~
 
-
+Remarques :
+- `setw` ne s'applique qu'à la prochaine valeur affichée ; `setfill`, `left`, `right`, `internal` et `showpos` restent actifs jusqu'à ce qu'on les change (le `'x'` est toujours utilisé aux lignes 4 et 5).
+- `internal` place le remplissage entre le signe et le nombre (ligne 3).
+- `showpos` ajoute un `+` devant les nombres positifs uniquement : il ne change rien pour -42 (lignes 4 et 5 identiques).
 
 </details>

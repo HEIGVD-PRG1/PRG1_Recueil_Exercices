@@ -3,24 +3,28 @@
 ### Objectif
 - Déterminer la nature de l'information à lire
 
-### A faire
-Ecrire un programme simple permettant de lire une saisie utilisateur.
-Selon la nature (type) du premier caractère saisi
-- `int` => lire la valeur en `double`
-- `char` => lire un string yc les espaces pouvant séparer plusieurs mots
+### À faire
+Écrire un programme simple permettant de lire une saisie utilisateur.
+Selon le premier caractère saisi :
+- un chiffre (`'0'` à `'9'`) => lire la valeur dans un `double`
+- tout autre caractère => lire une `std::string`, y compris les espaces pouvant séparer plusieurs mots
+
+Pour simplifier, on ne traite pas les nombres qui commencent par un signe (`-2.5`) ou par un espace : ils sont lus comme du texte.
+
+Indication : `std::cin.peek()` permet de regarder le prochain caractère du buffer sans le retirer.
 
 ### Exemples d'utilisation
 
 ~~~
-Saisie une valeur numérique ou un mot: 3.14
-Votre valeur: 3.14
+Saisissez une valeur numérique ou un mot : 3.14
+Votre valeur : 3.14
 ~~~
 
+~~~
+Saisissez une valeur numérique ou un mot : un bateau
+Votre mot : un bateau
+~~~
 
-~~~
-Saisie une valeur numérique ou un mot: un bateau
-Votre mot: un bateau
-~~~
 <details>
 <summary>Solution</summary>
 
@@ -28,26 +32,25 @@ Votre mot: un bateau
 #include <iostream>
 #include <cstdlib>
 #include <string>
-#define L_MAX 80
 
-using namespace std;
+int main() {
+    std::cout << "Saisissez une valeur numérique ou un mot : ";
 
-int main ( ) {
-   cout << "Saisie une valeur numérique ou un mot: ";
-   int first_car = cin.peek ( );
+    // Regarder le premier caractère sans le retirer du buffer
+    int premier_car = std::cin.peek();
 
-   if ( first_car >= '0' and first_car <= '9' ) {
-      double valeur;
-      cin >> valeur;
-      cout << "Votre valeur: " << valeur << endl;
-   }
-   else {
-      string mot;
-      getline(cin, mot);
-      cout << "Votre mot: " << mot << endl;
-   }
+    if (premier_car >= '0' and premier_car <= '9') {
+        double valeur;
+        std::cin >> valeur;
+        std::cout << "Votre valeur : " << valeur << '\n';
+    }
+    else {
+        std::string mot;
+        std::getline(std::cin, mot);
+        std::cout << "Votre mot : " << mot << '\n';
+    }
 
-   return EXIT_SUCCESS;
+    return EXIT_SUCCESS;
 }
 ~~~
 
