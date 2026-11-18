@@ -35,7 +35,7 @@ error: invalid operands to binary expression ('array<int, 3>' and 'array<int, 4>
 </details>
 
 ~~~cpp
-// no 2
+// no 3
 array<int, 3> a{1, 2, 3};
 array<short, 3> b{2, 3, 1};
 cout << boolalpha << (a < b);
@@ -50,7 +50,7 @@ error: invalid operands to binary expression ('array<int, 3>' and 'array<short, 
 </details>
 
 ~~~cpp
-// no 3
+// no 4
 array<int, 4> a{1, 2, 3};
 array<int, 4> b{1, 2, 3, -1};
 array<int, 4> c{1, 2, 3, 1};
