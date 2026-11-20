@@ -16,8 +16,8 @@ public:
 };
 
 int main() {
-   auto p1 = f();
-   auto p2 = f(2);
+   C* p1 = f();
+   C* p2 = f(2);
    g(p2);
    p2 = f(3);
    g(p1);
@@ -25,7 +25,7 @@ int main() {
 }
 ~~~
 
-Ecrivez les fonctions `f`, `g` et éventuelles surcharges de sorte que le programme affiche ce qui suit à l’exécution
+Écrivez les fonctions `f`, `g` et éventuelles surcharges de sorte que le programme affiche ce qui suit à l’exécution
 
 ~~~text
 CD C2 D2 C3 D0 D3

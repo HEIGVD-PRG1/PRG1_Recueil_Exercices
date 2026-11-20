@@ -7,6 +7,8 @@ Voiture.cpp
 main.cpp
 ~~~
 
+Le prix de l'essence n'est plus un membre de la classe : il est conservé dans le `main` et passé en paramètre de `effectuerTrajet`.
+
 Le résultat de l'exécution du programme ne doit pas changer.
 
 ~~~text
@@ -44,14 +46,13 @@ public:
    unsigned getCapaciteReservoir() const;
    double getConsommationMoyenne() const;
    double getNbLitresDansReservoir() const;
-   double effectuerTrajet(double nbKm); // en valeur de retour : le coût du trajet
-   static double getPrixEssence();
-   static void setPrixEssence(double prix);
+   // prixEssence en Frs par litre ; en valeur de retour : le coût du trajet
+   double effectuerTrajet(double nbKm, double prixEssence);
 private:
-   static double prixEssence;        // en Frs
-   const unsigned capaciteReservoir; // en litres
-   const double consommationMoyenne; // litres aux 100 km
-   double nbLitresDansReservoir;     // nb de litres actuellement dans le réservoir
+   // fixés à la construction : privés et sans setter, ils ne peuvent pas être modifiés
+   unsigned capaciteReservoir;     // en litres
+   double   consommationMoyenne;   // litres aux 100 km
+   double   nbLitresDansReservoir; // nb de litres actuellement dans le réservoir
 };
 
 #endif /* VOITURE_H */
@@ -65,13 +66,11 @@ private:
 ~~~cpp
 #include "Voiture.h"
 
-double Voiture::prixEssence = 1.7;
-
 Voiture::Voiture(unsigned capaciteReservoir, double consommationMoyenne)
 : capaciteReservoir(capaciteReservoir),
   consommationMoyenne(consommationMoyenne),
   nbLitresDansReservoir(capaciteReservoir) {
-}                     
+}
 
 unsigned Voiture::getCapaciteReservoir() const {
    return capaciteReservoir;
@@ -85,20 +84,12 @@ double Voiture::getNbLitresDansReservoir() const {
    return nbLitresDansReservoir;
 }
 
-double Voiture::effectuerTrajet(double nbKm) {
+double Voiture::effectuerTrajet(double nbKm, double prixEssence) {
    const double CONSOMMATION = nbKm * consommationMoyenne / 100;
    nbLitresDansReservoir -= CONSOMMATION;
    while (nbLitresDansReservoir <= 0)
       nbLitresDansReservoir += capaciteReservoir;
    return CONSOMMATION * prixEssence;
-}
-
-double Voiture::getPrixEssence() {
-   return prixEssence;
-}
-
-void Voiture::setPrixEssence(double prix) {
-   prixEssence = prix;   
 }
 ~~~
 </details>
@@ -116,8 +107,8 @@ void Voiture::setPrixEssence(double prix) {
 using namespace std;
 
 /*
-* Ces trois fonctions sont auxiliares dans le main, 
-* la fonction afficherVoiture pourrait eventuellement etre definie dans Voiture.h et Voiture.cpp
+* Ces trois fonctions sont auxiliaires dans le main,
+* la fonction afficherVoiture pourrait éventuellement être définie dans Voiture.h et Voiture.cpp
 */
 
 void afficherPrixEssence(double prix) {
@@ -142,17 +133,18 @@ void afficherCoutTrajet(double montant) {
 
 int main() {
 
-   afficherPrixEssence(Voiture::getPrixEssence());
-      
-   Voiture::setPrixEssence(1.95);
-   afficherPrixEssence(Voiture::getPrixEssence());   
+   double prixEssence = 1.7;   // en Frs par litre
+   afficherPrixEssence(prixEssence);
+
+   prixEssence = 1.95;
+   afficherPrixEssence(prixEssence);
 
    Voiture v(52, 6.7);
 
-   afficherVoiture(v);   
-   afficherCoutTrajet(v.effectuerTrajet(1000));
    afficherVoiture(v);
-   afficherCoutTrajet(v.effectuerTrajet(200));
+   afficherCoutTrajet(v.effectuerTrajet(1000, prixEssence));
+   afficherVoiture(v);
+   afficherCoutTrajet(v.effectuerTrajet(200, prixEssence));
    afficherVoiture(v);
 
    return EXIT_SUCCESS;

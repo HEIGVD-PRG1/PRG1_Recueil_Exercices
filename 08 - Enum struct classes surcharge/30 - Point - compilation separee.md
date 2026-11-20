@@ -10,11 +10,11 @@ main.cpp
 Le résultat de l'exécution du programme ne doit pas changer.
 
 ~~~text
-p1(1.2,2.4), p2(3.0,4.2)
+p1(1.2,2.4), p2(3,4.2)
 p1 + p2 = (4.2,6.6)
 p2 + p1 = (4.2,6.6)
-p1 + 2. = (3.2,4.4)
-2. + p1 = (3.2,4.4)
+p1 * 2. = (2.4,4.8)
+3. * p1 = (3.6,7.2)
 p1 != p2
 p1 == p3
 ~~~
@@ -48,11 +48,11 @@ private:
 
 // -----------------------------------------------------------------
 std::pair<double, double> analyserPoint(const Point& p);
-std::ostream& operator<<(std::ostream& cout, const Point& p);
+std::ostream& operator<<(std::ostream& os, const Point& p);
 Point operator+(const Point& lhs, const Point& rhs);
-Point operator+(const Point& lhs, double rhs);
-Point operator+(double rhs, const Point& lhs);
-bool operator== (const Point& lhs, const Point& rhs);
+Point operator*(const Point& p, double d);
+Point operator*(double d, const Point& p);
+bool operator==(const Point& lhs, const Point& rhs);
 
 // -----------------------------------------------------------------
 #endif /* POINT_H */
@@ -66,7 +66,6 @@ bool operator== (const Point& lhs, const Point& rhs);
 ~~~cpp
 #include <iostream>
 #include <utility>
-#include <iomanip>
 
 #include "Point.h"
 
@@ -108,26 +107,24 @@ pair<double, double> analyserPoint(const Point& p){
     return {p.getX(), p.getY()};
 }
 
-ostream& operator<<(ostream& cout, const Point& p){
-    return cout << fixed << setprecision(1) 
-            << "(" << p.getX() << "," 
-            << p.getY() << ")"; 
-}
-
-Point operator+(double rhs, const Point& lhs){
-    return lhs + rhs;
+ostream& operator<<(ostream& os, const Point& p) {
+    return os << "(" << p.getX() << "," << p.getY() << ")";
 }
 
 Point operator+(const Point& lhs, const Point& rhs) {
     return Point(lhs.getX() + rhs.getX(), lhs.getY() + rhs.getY());
 }
 
-Point operator+(const Point& lhs, double rhs) {
-    return Point(lhs.getX() + rhs, lhs.getY() + rhs);
+Point operator*(const Point& p, double d) {
+    return Point(p.getX() * d, p.getY() * d);
 }
 
-bool operator==(const Point& lhs, const Point & rhs) {
-    return lhs.getX() == rhs.getX() && lhs.getY() == rhs.getY();
+Point operator*(double d, const Point& p) {
+    return p * d;
+}
+
+bool operator==(const Point& lhs, const Point& rhs) {
+    return lhs.getX() == rhs.getX() and lhs.getY() == rhs.getY();
 }
 ~~~
 
@@ -138,6 +135,7 @@ bool operator==(const Point& lhs, const Point & rhs) {
 
 ~~~cpp
 #include <iostream>
+#include <cstdlib>
 
 #include "Point.h"
 
@@ -149,14 +147,13 @@ int main() {
     Point p2(3., 4.2);
 
     cout << "p1" << p1 << ", p2" << p2 << endl;
-    
+
     cout << "p1 + p2 = " << p1 + p2 << endl;
     cout << "p2 + p1 = " << p2 + p1 << endl;
 
-    cout << "p1 + 2. = " << p1 + 2. << endl;
-    cout << "2. + p1 = " << 2. + p1 << endl;
+    cout << "p1 * 2. = " << p1 * 2. << endl;
+    cout << "3. * p1 = " << 3. * p1 << endl;
 
-    
     cout << (p1 == p2 ? "p1 == p2" : "p1 != p2") << endl;
     Point p3(p1);
     cout << (p1 == p3 ? "p1 == p3" : "p1 != p3") << endl;

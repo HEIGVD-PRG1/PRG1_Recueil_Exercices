@@ -10,7 +10,7 @@ Nous avons besoin de convertir des coordonnées GPS dans les deux notations typi
 |    DD  | 46.7785711        | 6.6409158         |
 |   DMS  | N 46° 46' 42.856" | E 6° 38' 27.296"  |
 
-Après avoir déclaré les types de données (*struct* et *enum*) de la manière la plus flexible possible en économisant la mémoire, écrire de manière décomposée (autres sous-programmes) les deux fonctions de conversion.<br>
+Après avoir déclaré les types de données (*struct* et *enum*) de la manière la plus flexible possible, écrire de manière décomposée (autres sous-programmes) les deux fonctions de conversion.<br>
 Prévoir également deux fonctions d'affichage.
 
 Aide : [GPS coordinates converter](https://www.gps-coordinates.net/gps-coordinates-converter)
@@ -58,28 +58,23 @@ Longitude : 6.640916
 #include <iostream>
 #include <iomanip>
 #include <string>
-#include <cstdint>
+#include <cmath>
 
 using namespace std;
 
 //-----------------------------------------------------------------------------
 
-// degree - decimal
-using DD = double;
-
+// degrés décimaux
 struct Coord_DD {
-   DD latitude;
-   DD longitude;
+   double latitude;
+   double longitude;
 };
 
-using Degree = uint8_t;
-using Minute = uint8_t;
-using Second = double;
-
+// degrés, minutes, secondes
 struct DMS {
-   Degree degree;
-   Minute minute;
-   Second second;
+   int    degree;
+   int    minute;
+   double second;
 };
 
 enum class Dir_NS {N, S};
@@ -98,29 +93,28 @@ struct DMS_Longitude {
 struct Coord_DMS {
    DMS_Latitude  latitude;
    DMS_Longitude longitude;
-}; // Note: gros gaspillage de place (sizeof(Coord_DMS) = 48 bytes)
-   // 8 octets sont suffisant pour une précision centimétrique sur le globe
+};
 
 //-----------------------------------------------------------------------------
 // param volontairement par valeur
-DMS DD_to_DMS(DD dd) {
+DMS DD_to_DMS(double dd) {
    dd            = abs(dd);
-   Degree degree = static_cast<Degree>(dd);
-   Minute minute = static_cast<Minute>((dd - degree) * 60);
-   Second second = ((dd - degree) * 60 - minute) * 60;
+   int    degree = static_cast<int>(dd);
+   int    minute = static_cast<int>((dd - degree) * 60);
+   double second = ((dd - degree) * 60 - minute) * 60;
 
    return DMS{degree, minute, second};
 }
 
 //-----------------------------------------------------------------------------
-DD DMS_to_DD (const DMS& dms) {
+double DMS_to_DD (const DMS& dms) {
    return dms.degree + (dms.minute / 60.0) + (dms.second / 3600.0);
 }
 
 //-----------------------------------------------------------------------------
 Coord_DD coord_DMS_to_DD (const Coord_DMS& dms) {
-   DD latitude_sign  = dms.latitude.direction  == Dir_NS::N ? 1.0 : -1.0;
-   DD longitude_sign = dms.longitude.direction == Dir_EW::E ? 1.0 : -1.0;
+   double latitude_sign  = dms.latitude.direction  == Dir_NS::N ? 1.0 : -1.0;
+   double longitude_sign = dms.longitude.direction == Dir_EW::E ? 1.0 : -1.0;
    return Coord_DD {
          latitude_sign  * DMS_to_DD(dms.latitude.dms),
          longitude_sign * DMS_to_DD(dms.longitude.dms)
@@ -140,16 +134,16 @@ void afficher_DMS(const Coord_DMS& dms) {
    cout << fixed << setprecision(3);
    cout << "Latitude  : ";
    cout << (dms.latitude.direction == Dir_NS::N ? 'N' : 'S') << " ";
-   cout << (int)dms.latitude.dms.degree << "°"
-        << (int)dms.latitude.dms.minute << "'"
-        <<      dms.latitude.dms.second << "\"" << endl;
+   cout << dms.latitude.dms.degree << "°"
+        << dms.latitude.dms.minute << "'"
+        << dms.latitude.dms.second << "\"" << endl;
 
    cout << "Longitude : ";
    cout << (dms.longitude.direction == Dir_EW::E ? 'E' : 'W') << " ";
-   cout << (int)dms.longitude.dms.degree << "°"
-        << (int)dms.longitude.dms.minute << "'"
-        <<      dms.longitude.dms.second << "\"" << endl;
-};
+   cout << dms.longitude.dms.degree << "°"
+        << dms.longitude.dms.minute << "'"
+        << dms.longitude.dms.second << "\"" << endl;
+}
 
 //-----------------------------------------------------------------------------
 void afficher_DD(const Coord_DD& dd) {

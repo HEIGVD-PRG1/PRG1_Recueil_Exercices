@@ -26,7 +26,7 @@ int main() {
 ~~~
 
 ~~~text
-p1(1.2,2.4), p2(3.0,4.2)
+p1(1.2,2.4), p2(3,4.2)
 p1 + p2 = (4.2,6.6)
 p2 + p1 = (4.2,6.6)
 p1 * 2. = (2.4,4.8)
@@ -48,48 +48,45 @@ public:
    Point();
    Point(double x, double y);
 
-   Point& operator+=(Point const& other);
-   Point& operator*=(double d);
+   double getX() const;
+   double getY() const;
 
 private:
    double x, y;
-
-   friend ostream& operator<< (ostream& out, Point const& pt);
-   friend bool operator == (Point const& lhs, Point const& rhs);
 };
 
 Point::Point() : Point(0., 0.) {}
 
 Point::Point(double x, double y) : x(x), y(y) {}
 
-ostream& operator<< (ostream& out, Point const& pt) {
-   return out << "(" << pt.x << "," << pt.y << ")";
+double Point::getX() const {
+   return x;
 }
 
-Point& Point::operator+=(const Point& other) {
-   x += other.x;
-   y += other.y;
-   return *this;
+double Point::getY() const {
+   return y;
 }
 
-Point operator+ (Point pt1, Point const& pt2) {
-   return pt1 += pt2;
+// Opérateurs externes : ils n'accèdent qu'à l'interface publique (getters)
+
+ostream& operator<< (ostream& out, const Point& pt) {
+   return out << "(" << pt.getX() << "," << pt.getY() << ")";
 }
 
-Point& Point::operator*=(double d) {
-   x *= d; y *= d; return *this;
+Point operator+ (const Point& pt1, const Point& pt2) {
+   return Point(pt1.getX() + pt2.getX(), pt1.getY() + pt2.getY());
 }
 
-Point operator* (Point pt, double d) {
-   return pt *= d;
+Point operator* (const Point& pt, double d) {
+   return Point(pt.getX() * d, pt.getY() * d);
 }
 
-Point operator* (double d, Point pt) {
-   return pt *= d;
+Point operator* (double d, const Point& pt) {
+   return pt * d;
 }
 
-bool operator == (Point const& lhs, Point const& rhs) {
-   return lhs.x == rhs.x and lhs.y == rhs.y;
+bool operator== (const Point& lhs, const Point& rhs) {
+   return lhs.getX() == rhs.getX() and lhs.getY() == rhs.getY();
 }
 
 int main() {

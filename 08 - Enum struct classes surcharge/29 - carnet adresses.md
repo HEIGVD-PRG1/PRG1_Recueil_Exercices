@@ -1,17 +1,17 @@
 # Carnet d'adresses
 
-Soit la déclaration et l'instruction
+Soient la déclaration et l'instruction
 
 ~~~cpp
-array carnet {Personne{"Jean"s,   "Veuxplus"s, Date{ 7,  4, 1975}},
-              Personne{"Alain"s,  "Verse"s,    Date{21, 12, 2018}},
-              Personne{"Justin"s, "Ptipeu"s,   Date{ 1,  8, 2023}},
-              Personne{"Rémi"s,   "Fasol"s,    Date{17,  5, 1957}}};
+array<Personne, 4> carnet {Personne{"Jean",   "Veuxplus", Date{ 7,  4, 1975}},
+                           Personne{"Alain",  "Verse",    Date{21, 12, 2018}},
+                           Personne{"Justin", "Ptipeu",   Date{ 1,  8, 2023}},
+                           Personne{"Rémi",   "Fasol",    Date{17,  5, 1957}}};
 
 cout << carnet << endl;
 ~~~
 
-Ecrire le code nécessaire afin d'afficher le carnet d'adresse comme suit :
+Écrire le code nécessaire afin d'afficher le carnet d'adresses comme suit :
 
 ~~~
 prenom : Jean
@@ -36,9 +36,9 @@ date   : 17.5.1957
 
 ~~~cpp
 struct Date {
-   uint8_t  jour;
-   uint8_t  mois;
-   uint16_t annee;
+   int jour;
+   int mois;
+   int annee;
 };
 
 struct Personne {
@@ -48,8 +48,7 @@ struct Personne {
 };
 
 ostream& operator<< (ostream& os, const Date& d) {
-   os << (int)d.jour << "." << (int)d.mois << "." << d.annee;
-// os << +d.jour << "." << +d.mois << "." << d.annee;
+   os << d.jour << "." << d.mois << "." << d.annee;
    return os;
 }
 
@@ -60,10 +59,9 @@ ostream& operator<< (ostream& os, const Personne& p) {
    return os;
 }
 
-template <typename T, size_t taille>
-ostream& operator<< (ostream& os, const array<T, taille> tab) {
-   for(const T& t : tab)
-      os << t << endl;
+ostream& operator<< (ostream& os, const array<Personne, 4>& carnet) {
+   for (const Personne& p : carnet)
+      os << p << endl;
    return os;
 }
 ~~~

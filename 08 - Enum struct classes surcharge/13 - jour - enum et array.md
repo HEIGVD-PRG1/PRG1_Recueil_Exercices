@@ -3,14 +3,14 @@
 Soient les deux déclarations
 
 ~~~cpp
-enum class  Day { ERROR,   LUNDI,   MARDI,   MERCREDI,   JEUDI,   VENDREDI,   SAMEDI,   DIMANCHE};
-const array DAY {"ERROR", "LUNDI", "MARDI", "MERCREDI", "JEUDI", "VENDREDI", "SAMEDI", "DIMANCHE"};
+enum class            Day { ERROR,   LUNDI,   MARDI,   MERCREDI,   JEUDI,   VENDREDI,   SAMEDI,   DIMANCHE};
+const array<string, 8> DAY {"ERROR", "LUNDI", "MARDI", "MERCREDI", "JEUDI", "VENDREDI", "SAMEDI", "DIMANCHE"};
 ~~~  
 
-Ecrire les deux fonctions
+Écrire les deux fonctions
 
-- **stringToDay** : reçoit un jour en *string* et retourne l'équivalent en *enum*
-- **dayToString** : reçoit un jour en *enum* et retourne l'équivalent en *string*
+- **string_to_day** : reçoit un jour en *string* et retourne l'équivalent en *enum*
+- **day_to_string** : reçoit un jour en *enum* et retourne l'équivalent en *string*
 
 Le cas échéant, retourne *enum ERROR* ou *string "ERROR"* selon la fonction.
 
@@ -22,9 +22,9 @@ Le cas échéant, retourne *enum ERROR* ou *string "ERROR"* selon la fonction.
 ~~~cpp
 string day_to_string (Day d) {
    if (d >= Day::LUNDI and d <= Day::DIMANCHE)
-      return DAY[size_t(d)];
+      return DAY[static_cast<size_t>(d)];
 
-   return DAY[size_t(Day::ERROR)];
+   return DAY[static_cast<size_t>(Day::ERROR)];
 }
 ~~~
 
@@ -32,7 +32,7 @@ string day_to_string (Day d) {
 Day string_to_day (const string& s) {
    for (size_t i=1; i<DAY.size(); ++i)
       if (DAY[i] == s)
-         return Day(i);
+         return static_cast<Day>(i);
    return Day::ERROR;
 }
 ~~~

@@ -1,29 +1,30 @@
 # Trace
 
-Soient la classe suivante et les fonctions
+Soient la classe suivante et les fonctions.
+Les objets n'ont pas d'identifiant : seule la lettre (`data`) est affichée.
 
 ~~~cpp
-class Trace {
-   friend ostream& operator<< (ostream& os, const Trace& t) {
-      return os << t.id << t.data;
-   }
+class Trace;
+ostream& operator<< (ostream& os, const Trace& t);   // déclaré avant la classe, qui l'utilise
 
+class Trace {
 public:
-   Trace()                   : id(nextId++), data('a')  { cout << "C0(" << *this << ") "; }
-   Trace(char data)          : id(nextId++), data(data) { cout << "Ci(" << *this << ") "; }
-   Trace(const Trace& other) : id(nextId++)             { this->data = other.data;
-                                                          cout << "CC("  << other << "->" << *this << ") "; }
-   ~Trace()                                             { cout << "D("  << *this << ") "; }
-   Trace& operator= (const Trace& other)                { this->data = other.data;
-                                                          cout << "=C("  << other << "->" << *this << ") ";
-                                                          return *this; }
+   Trace()                   : data('a')  { cout << "C0(" << *this << ") "; }
+   Trace(char data)          : data(data) { cout << "Ci(" << *this << ") "; }
+   Trace(const Trace& other)              { this->data = other.data;
+                                            cout << "CC(" << other << "->" << *this << ") "; }
+   ~Trace()                               { cout << "D("  << *this << ") "; }
+   Trace& operator= (const Trace& other)  { this->data = other.data;
+                                            cout << "=C(" << other << "->" << *this << ") ";
+                                            return *this; }
+   char getData() const                   { return data; }
 private:
-   static int  nextId;      // propriété commune à tous les objects de cette classe
-          int  id;
-          char data;
+   char data;
 };
 
-int Trace::nextId = 1;
+ostream& operator<< (ostream& os, const Trace& t) {
+   return os << t.getData();
+}
 
 Trace f1 (char i)         { cout << "f1 : "; return Trace(i); }
 Trace f2 (Trace t)        { cout << "f2 : "; return t;        }
@@ -43,7 +44,7 @@ Trace trace1a;
 <summary>Solution</summary>
 
 ~~~
-C0(1a)
+C0(a)
 ~~~
 
 ------------------------------------------------------------
@@ -59,7 +60,7 @@ Trace trace1b('a');
 <summary>Solution</summary>
 
 ~~~
-Ci(2a)
+Ci(a)
 ~~~
 
 ------------------------------------------------------------
@@ -75,7 +76,7 @@ Trace trace1c(trace1a);
 <summary>Solution</summary>
 
 ~~~
-CC(1a->3a)
+CC(a->a)
 ~~~
 
 ------------------------------------------------------------
@@ -91,7 +92,7 @@ Trace trace1d(Trace('b'));
 <summary>Solution</summary>
 
 ~~~
-Ci(4b)
+Ci(b)
 ~~~
 
 ------------------------------------------------------------
@@ -107,12 +108,12 @@ Trace trace1e(f1('c'));
 <summary>Solution</summary>
 
 ~~~
-f1 : Ci(5c)
+f1 : Ci(c)
 ~~~
 
 **Note**
 
-- `f1('c')` crée un objet `Trace` avec le caractère `c` en utilisant le constructeur `Trace(char data)`, affichant "Ci(5c)".
+- `f1('c')` crée un objet `Trace` avec le caractère `c` en utilisant le constructeur `Trace(char data)`, affichant `Ci(c)`.
 - L'objet `Trace` temporaire retourné par `f1('c')` est directement utilisé pour initialiser `trace1e` sans nécessiter de copie explicite grâce à l'optimisation du compilateur RVO (Return Value Optimization).
 
 ------------------------------------------------------------
@@ -128,12 +129,12 @@ Trace trace1f(f2(trace1a));
 <summary>Solution</summary>
 
 ~~~
-CC(1a->6a) f2 : CC(6a->7a) D(6a)
+CC(a->a) f2 : CC(a->a) D(a)
 ~~~
 
-- passage de `trace1a` par valeur (copie) à `f2` => `CC(1a->6a))`
-- utilisation du retour de `f2` pour contructruire `trace1f` => `CC(6a->7a)`
-- fin de `f2` et destruction du paramètre => `D(6a)`
+- passage de `trace1a` par valeur (copie) au paramètre `t` de `f2` => premier `CC(a->a)`
+- utilisation du retour de `f2` (copie de `t`) pour construire `trace1f` => second `CC(a->a)`
+- fin de `f2` et destruction du paramètre `t` => `D(a)`
 
 ------------------------------------------------------------
 
@@ -148,10 +149,10 @@ Trace trace1g(f3(trace1a));
 <summary>Solution</summary>
 
 ~~~
-f3 : CC(1a->8a)
+f3 : CC(a->a)
 ~~~
 
-- le parmètre `trace1a` est directement utilisé pour construire `trace1g` => `CC(1a->8a)`
+- le paramètre `t` (référence vers `trace1a`) est directement utilisé pour construire `trace1g` => `CC(a->a)`
 
 ------------------------------------------------------------
 
@@ -166,12 +167,12 @@ vector<Trace> vect(3, Trace('b'));
 <summary>Solution</summary>
 
 ~~~
-Ci(9b) CC(9b->10b) CC(9b->11b) CC(9b->12b) D(9b)
+Ci(b) CC(b->b) CC(b->b) CC(b->b) D(b)
 ~~~
 
-- création de `Trace(2)` => `Ci(9b)`
-- 3 copies dans le vecteur => `CC(9b->10b) CC(9b->11b) CC(9b->12b)`
-- suppression de l'objet temporaire => `Ci(9b)`
+- création de l'objet temporaire `Trace('b')` => `Ci(b)`
+- 3 copies dans le vecteur => `CC(b->b) CC(b->b) CC(b->b)`
+- suppression de l'objet temporaire => `D(b)`
 
 Note
 
@@ -193,13 +194,13 @@ vect.push_back(trace1a);
 <summary>Solution</summary>
 
 ~~~
-CC(1a->13a) CC(12b->14b) CC(11b->15b) CC(10b->16b) D(12b) D(11b) D(10b)
+CC(a->a) CC(b->b) CC(b->b) CC(b->b) D(b) D(b) D(b)
 ~~~
 
 - mise à jour de la capacité (3 => 6) et de la taille (3 => 4) du vecteur 
-- construction par copie du nouvelle élément => `CC(1a->13a)`
-- construction par copie des éléments dans le nouvel emplacement mémoire => `CC(12b->14b) CC(11b->15b) CC(10b->16b)`
-- suppression des éléments dans l'ancien emplacement mémoire => `D(12b) D(11b) D(10b)`
+- construction par copie du nouvel élément => `CC(a->a)`
+- construction par copie des 3 éléments dans le nouvel emplacement mémoire => `CC(b->b) CC(b->b) CC(b->b)`
+- suppression des 3 éléments dans l'ancien emplacement mémoire => `D(b) D(b) D(b)`
 
 ------------------------------------------------------------
 
@@ -215,11 +216,11 @@ trace2a = trace1a;
 <summary>Solution</summary>
 
 ~~~
-Ci(17b) =C(1a->17a)
+Ci(b) =C(a->a)
 ~~~
 
-- construction de `trace2a(2)` => `Ci(17b)`
-- affectation dans `trace2a` => `=C(1a->17a)`
+- construction de `trace2a('b')` => `Ci(b)`
+- affectation de `trace1a` dans `trace2a`, qui contient maintenant `'a'` => `=C(a->a)`
 
 ------------------------------------------------------------
 
@@ -234,13 +235,13 @@ trace2a = f1('c');
 <summary>Solution</summary>
 
 ~~~
-f1 : Ci(18c) =C(18c->17c) D(18c)
+f1 : Ci(c) =C(c->c) D(c)
 ~~~
 
-- appel de `f1` avec `3` comme paramètre
-- construction dans la fonction de l'objet => `Ci(18c)`
-- affectation dans `trace2a` du retour de `f1` => `=C(18c->17c)`
-- desctruction de l'objet au terme de la fonction => `D(18c)`
+- appel de `f1` avec `'c'` comme paramètre
+- construction dans la fonction de l'objet retourné => `Ci(c)`
+- affectation dans `trace2a` du retour de `f1` => `=C(c->c)`
+- destruction de l'objet temporaire retourné par `f1` => `D(c)`
 
 ------------------------------------------------------------
 
@@ -255,13 +256,13 @@ trace2a = f2(trace1a);
 <summary>Solution</summary>
 
 ~~~
-CC(1a->19a) f2 : CC(19a->20a) =C(20a->17a) D(20a) D(19a)
+CC(a->a) f2 : CC(a->a) =C(a->a) D(a) D(a)
 ~~~
 
-- appel de `f2` et passage par valeur (copie) de `trace1a` => `CC(1a->19a)`
-- retour du paramètre `t` à `Trace` => `CC(19a->20a)`
-- affectation dans `trace2a` => `=C(20a->17a)`
-- suppression du paramètre et de l'objet utilisé pour le retour => `D(20a) D(19a)`
+- appel de `f2` et passage par valeur (copie) de `trace1a` => premier `CC(a->a)`
+- retour du paramètre `t` (copie) => second `CC(a->a)`
+- affectation dans `trace2a` => `=C(a->a)`
+- suppression de l'objet utilisé pour le retour, puis du paramètre `t` => `D(a) D(a)`
 
 ------------------------------------------------------------
 
@@ -276,13 +277,13 @@ trace2a = f3(trace1a);
 <summary>Solution</summary>
 
 ~~~
-f3 : CC(1a->21a) =C(21a->17a) D(21a)
+f3 : CC(a->a) =C(a->a) D(a)
 ~~~
 
 - passage du paramètre par ref constante `const Trace& t`
-- retour du paramètre `t` à `Trace` => `CC(1a->21a)`
-- affectation dans `trace2a` => `=C(21a->17a)`
-- suppression de l'objet utilisé pour le retour => `D(21a)`
+- retour du paramètre `t` (copie) => `CC(a->a)`
+- affectation dans `trace2a` => `=C(a->a)`
+- suppression de l'objet utilisé pour le retour => `D(a)`
 
 ------------------------------------------------------------
 
@@ -299,11 +300,11 @@ f3 : CC(1a->21a) =C(21a->17a) D(21a)
 <summary>Solution</summary>
 
 ~~~
-Ci(22a) D(22a)
+Ci(a) D(a)
 ~~~
 
-- construction avec `trace1b(1)` => `Ci(22a)`
-- sortie du bloc `{..}`, donc destruction de l'objet => `D(22a)`
+- construction de `trace1b('a')` => `Ci(a)`
+- sortie du bloc `{..}`, donc destruction de l'objet => `D(a)`
 
 ------------------------------------------------------------
 
@@ -320,11 +321,11 @@ Ci(22a) D(22a)
 <summary>Solution</summary>
 
 ~~~
-C0(23a) C0(24a) C0(25a) D(25a) D(24a) D(23a)
+C0(a) C0(a) C0(a) D(a) D(a) D(a)
 ~~~
 
-- construction de 3 objets pour le vecteur => `C0(23a) C0(24a) C0(25a)`
-- sortie du bloc `{..}`, donc destruction des 3 objets => `D(25a) D(24a) D(23a)`
+- construction de 3 objets pour le vecteur (constructeur par défaut) => `C0(a) C0(a) C0(a)`
+- sortie du bloc `{..}`, donc destruction des 3 objets => `D(a) D(a) D(a)`
 
 ------------------------------------------------------------
 
@@ -341,14 +342,13 @@ C0(23a) C0(24a) C0(25a) D(25a) D(24a) D(23a)
 <summary>Solution</summary>
 
 ~~~
-Ci(26a) CC(26a->27a) CC(26a->28a) D(26a) D(28a) D(27a)
+Ci(a) CC(a->a) CC(a->a) D(a) D(a) D(a)
 ~~~
 
-- construction de 1 objet connu `Ci(26a)`
-- ... copie de cet objets dans les éléments du vecteur => `CC(26a->27a) CC(26a->28a)`
-- destruction de l'objet temporaire `D(26a)`
-- sortie du bloc `{..}`, donc destruction des objets du vecteur => `D(28a) D(27a)`
-
+- construction de l'objet temporaire `Trace('a')` => `Ci(a)`
+- copie de cet objet dans les 2 éléments du vecteur => `CC(a->a) CC(a->a)`
+- destruction de l'objet temporaire => `D(a)`
+- sortie du bloc `{..}`, donc destruction des objets du vecteur => `D(a) D(a)`
 
 ------------------------------------------------------------
 
@@ -365,11 +365,11 @@ Ci(26a) CC(26a->27a) CC(26a->28a) D(26a) D(28a) D(27a)
 <summary>Solution</summary>
 
 ~~~
-CC(1a->29a) CC(1a->30a) D(30a) D(29a)
+CC(a->a) CC(a->a) D(a) D(a)
 ~~~
 
-- copie de `trace1a` dans les éléments du vecteur => `CC(1a->29a) CC(1a->30a)`
-- sortie du bloc `{..}`, donc destruction des objets du vecteur => `D(30a) D(29a)`
+- copie de `trace1a` dans les éléments du vecteur => `CC(a->a) CC(a->a)`
+- sortie du bloc `{..}`, donc destruction des objets du vecteur => `D(a) D(a)`
 
 ------------------------------------------------------------
 
@@ -385,27 +385,27 @@ CC(1a->29a) CC(1a->30a) D(30a) D(29a)
 
 using namespace std;
 
-class Trace {
-   friend ostream& operator<< (ostream& os, const Trace& t) {
-      return os << t.id << t.data;
-   }
+class Trace;
+ostream& operator<< (ostream& os, const Trace& t);   // déclaré avant la classe, qui l'utilise
 
+class Trace {
 public:
-   Trace()           : id(nextId++), data('a')     { cout << "C0(" << *this << ") ";   }
-   Trace(char data)  : id(nextId++), data(data)    { cout << "Ci(" << *this << ") ";   }
-   Trace(const Trace& other)     :id(nextId++)     { this->data = other.data;
-                                                     cout << "CC("  << other << "->" << *this << ") "; }
-   ~Trace()                                        { cout << "D(" << *this << ") ";   }
-   Trace& operator=(const Trace& other)            { this->data = other.data;
-                                                     cout << "=C("  << other << "->" << *this << ") ";
-                                                     return *this; }
+   Trace()                   : data('a')  { cout << "C0(" << *this << ") "; }
+   Trace(char data)          : data(data) { cout << "Ci(" << *this << ") "; }
+   Trace(const Trace& other)              { this->data = other.data;
+                                            cout << "CC(" << other << "->" << *this << ") "; }
+   ~Trace()                               { cout << "D("  << *this << ") "; }
+   Trace& operator= (const Trace& other)  { this->data = other.data;
+                                            cout << "=C(" << other << "->" << *this << ") ";
+                                            return *this; }
+   char getData() const                   { return data; }
 private:
-   static int  nextId;
-          int  id;
-          char data;
+   char data;
 };
 
-int Trace::nextId = 1;
+ostream& operator<< (ostream& os, const Trace& t) {
+   return os << t.getData();
+}
 
 Trace f1(char i)         { cout << "f1 : "; return Trace(i); }
 Trace f2(Trace t)        { cout << "f2 : "; return t;        }
@@ -515,27 +515,31 @@ int main() {
 ~~~
 
 ~~~
-no  1 : C0(1a) 
-no  2 : Ci(2a) 
-no  3 : CC(1a->3a) 
-no  4 : Ci(4b) 
-no  5 : f1 : Ci(5c) 
-no  6 : CC(1a->6a) f2 : CC(6a->7a) D(6a) 
-no  7 : f3 : CC(1a->8a) 
-no  8 : Ci(9b) CC(9b->10b) CC(9b->11b) CC(9b->12b) D(9b) 	3 / 3
-no  9 : CC(1a->13a) CC(12b->14b) CC(11b->15b) CC(10b->16b) D(12b) D(11b) D(10b) 	4 / 6
-no 10 : Ci(17b) =C(1a->17a) 
-no 11 : f1 : Ci(18c) =C(18c->17c) D(18c) 
-no 12 : CC(1a->19a) f2 : CC(19a->20a) =C(20a->17a) D(20a) D(19a) 
-no 13 : f3 : CC(1a->21a) =C(21a->17a) D(21a) 
-no 14 : Ci(22a) D(22a) 
-no 15 : C0(23a) C0(24a) C0(25a) D(25a) D(24a) D(23a) 
-no 16 : Ci(26a) CC(26a->27a) CC(26a->28a) D(26a) D(28a) D(27a) 
-no 17 : CC(1a->29a) CC(1a->30a) D(30a) D(29a) 
+no  1 : C0(a) 
+no  2 : Ci(a) 
+no  3 : CC(a->a) 
+no  4 : Ci(b) 
+no  5 : f1 : Ci(c) 
+no  6 : CC(a->a) f2 : CC(a->a) D(a) 
+no  7 : f3 : CC(a->a) 
+no  8 : Ci(b) CC(b->b) CC(b->b) CC(b->b) D(b) 	3 / 3
+no  9 : CC(a->a) CC(b->b) CC(b->b) CC(b->b) D(b) D(b) D(b) 	4 / 6
+no 10 : Ci(b) =C(a->a) 
+no 11 : f1 : Ci(c) =C(c->c) D(c) 
+no 12 : CC(a->a) f2 : CC(a->a) =C(a->a) D(a) D(a) 
+no 13 : f3 : CC(a->a) =C(a->a) D(a) 
+no 14 : Ci(a) D(a) 
+no 15 : C0(a) C0(a) C0(a) D(a) D(a) D(a) 
+no 16 : Ci(a) CC(a->a) CC(a->a) D(a) D(a) D(a) 
+no 17 : CC(a->a) CC(a->a) D(a) D(a) 
 
 fin de programme
-D(17a) D(13a) D(14b) D(15b) D(16b) D(8a) D(7a) D(5c) D(4b) D(3a) D(2a) D(1a) 
+D(a) D(a) D(b) D(b) D(b) D(a) D(a) D(c) D(b) D(a) D(a) D(a) 
 ~~~
+
+**Note** : l'ordre de destruction des éléments d'un `vector` dépend de la bibliothèque standard.
+Ce résultat est celui de clang (macOS), qui détruit les éléments du dernier au premier.
+Avec g++, la dernière ligne commence par `D(a) D(b) D(b) D(b) D(a)` (éléments détruits du premier au dernier).
 
 </details>
 

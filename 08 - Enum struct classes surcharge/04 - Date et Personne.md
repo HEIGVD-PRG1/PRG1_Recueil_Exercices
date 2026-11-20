@@ -50,16 +50,10 @@ int main() {
 #ifndef DATE_H
 #define DATE_H
 
-#include <cstdint>
-
-using Jour  = uint8_t;
-using Mois  = uint8_t;
-using Annee = uint16_t;
-
 struct Date {
-   Jour  jour;
-   Mois  mois;
-   Annee annee;
+   int jour;
+   int mois;
+   int annee;
 };
 
 void afficher_date(const Date& d);
@@ -76,15 +70,14 @@ void afficher_date(const Date& d);
 // A NOTER
 // - using namespace std possible
 // - #include <iostream> ici et non dans le .h
-// - cast (int)d.jour et (int)d.mois sinon un car est affiché
 //----------------------------------------------
 
 #include <iostream>
 #include "date.h"
 
 void afficher_date(const Date& d) {
-   std::cout << (int)d.jour << '.'
-             << (int)d.mois << '.'
+   std::cout << d.jour << '.'
+             << d.mois << '.'
              << d.annee;
 }
 ~~~

@@ -1,13 +1,13 @@
 # Nombre de jours entre 2 dates (2)
 
 Reprenez votre code de l'exercice [01-06](./06%20-%20Nombre%20de%20jours%20entre%202%20dates.md) 
-et modifiez le pour que les mois utilisent une `enum class` plutôt que le type `uint8_t`.
+et modifiez le pour que les mois utilisent une `enum class` plutôt qu'un `int`.
 
 ~~~cpp
 struct Date {
-   uint8_t jour;
+   int  jour;
    Mois mois;
-   int16_t annee;
+   int  annee;
 };
 ~~~
 
@@ -18,29 +18,28 @@ struct Date {
 #include <iostream>
 #include <sstream>
 #include <iomanip>
-#include <cstdint>
 
 using namespace std;
 
-enum class Mois : uint8_t {
+enum class Mois {
    JANVIER = 1, FEVRIER, MARS, AVRIL,
    MAI, JUIN, JUILLET, AOUT,
    SEPTEMBRE, OCTOBRE, NOVEMBRE, DECEMBRE
 };
 
 Mois& increment(Mois& m) {
-   return m = Mois(int(m) % 12+1);
+   return m = static_cast<Mois>(static_cast<int>(m) % 12 + 1);
 }
 
 struct Date {
-   uint8_t jour;
+   int  jour;
    Mois mois;
-   int16_t annee;
+   int  annee;
 };
 
 bool est_bissextile(const Date& d) {
    return d.annee % 400 == 0 or
-          (d.annee % 4 == 0 and d.annee % 100);
+          (d.annee % 4 == 0 and d.annee % 100 != 0);
 }
 
 int duree_annee(Date const& d) {
@@ -51,9 +50,9 @@ int duree_mois(Date const& d) {
    switch(d.mois) {
       case Mois::FEVRIER:
          return est_bissextile(d) ? 29 : 28;
-      case Mois::AVRIL: [[fallthrough]];
-      case Mois::JUIN: [[fallthrough]];
-      case Mois::SEPTEMBRE: [[fallthrough]];
+      case Mois::AVRIL:
+      case Mois::JUIN:
+      case Mois::SEPTEMBRE:
       case Mois::NOVEMBRE:
          return 30;
       default :
@@ -65,7 +64,7 @@ int date_to_int(Date const& d) {
    int r = d.jour;
    for(Mois m = Mois::JANVIER; m < d.mois; increment(m))
       r += duree_mois(Date{1,m,d.annee});
-   for(int16_t a = 1; a < d.annee; ++a)
+   for(int a = 1; a < d.annee; ++a)
       r += duree_annee(Date{1,Mois::JANVIER,a});
    return r;
 }
@@ -77,8 +76,8 @@ int jours_entre(Date const& d1, Date const& d2) {
 string to_string(const Date& d) {
    stringstream out;
    out << setfill('0') << right
-       << setw(2) << +d.jour << '/'
-       << setw(2) << int(d.mois) << '/'
+       << setw(2) << d.jour << '/'
+       << setw(2) << static_cast<int>(d.mois) << '/'
        << setw(4) << d.annee;
    return out.str();
 }

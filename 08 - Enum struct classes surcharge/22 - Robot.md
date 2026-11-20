@@ -67,12 +67,12 @@ Robot::Robot(int positionInitiale)
 }
 
 void Robot::faireDemiTour() {
-    direction == Dir::GAUCHE ? direction = Dir::DROITE : direction = Dir::GAUCHE;
+    direction = (direction == Dir::GAUCHE) ? Dir::DROITE : Dir::GAUCHE;
 }
 
 void Robot::deplacer(int nbUnites) {
     if(nbUnites > 0)
-        position += int(direction) * nbUnites;
+        position += static_cast<int>(direction) * nbUnites;
 }
 
 int Robot::getPosition() const {
