@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Les exceptions en C++ : try / catch pas à pas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5f4ef; --card:#ffffff; --ink:#1c1c1a; --muted:#6b6a64; --line:#d9d7cf;
+  --code:#1d1e23; --code2:#26272d; --codeink:#e6e6e3; --codemuted:#6d6f78;
+  --run:#3b82f6; --throw:#e5484d; --test:#f0a020; --yes:#2f9e65; --try:#8e4ec6;
+  --kw:#c792ea; --ty:#82aaff; --str:#c3e88d; --num:#f78c6c; --com:#7f8496; --pre:#ff9cac;
+  --mono:'JetBrains Mono',ui-monospace,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 Inter,system-ui,sans-serif}
+code{font-family:var(--mono);font-size:.92em;background:#ecebe4;padding:1px 5px;border-radius:4px}
+.wrap{max-width:1320px;margin:0 auto;padding:22px 22px 40px}
+header h1{font-size:26px;margin:0 0 4px;letter-spacing:-.01em}
+header p{margin:0 0 16px;color:var(--muted)}
+.scen{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.scen button{font:inherit;border:1.5px solid var(--line);background:var(--card);border-radius:10px;padding:8px 12px;cursor:pointer;text-align:left;line-height:1.25}
+.scen button small{display:block;color:var(--muted);font-family:var(--mono);font-size:11.5px;margin-top:2px}
+.scen button.on{border-color:var(--ink);box-shadow:0 0 0 1px var(--ink)}
+.bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:12px}
+.bar button{font:600 14px Inter,sans-serif;border:0;border-radius:8px;padding:8px 14px;cursor:pointer;background:#ecebe4;color:var(--ink)}
+.bar button.primary{background:var(--ink);color:#fff;min-width:118px}
+.bar button:disabled{opacity:.4;cursor:default}
+.bar select{font:inherit;padding:6px;border-radius:8px;border:1px solid var(--line);background:#fff}
+.prog{flex:1;min-width:140px;height:6px;background:#ecebe4;border-radius:4px;overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:var(--ink);transition:width .35s}
+.count{font:500 13px var(--mono);color:var(--muted);min-width:80px;text-align:right}
+.explain{background:var(--card);border:1px solid var(--line);border-left:6px solid var(--run);border-radius:12px;padding:14px 18px;font-size:17.5px;min-height:76px;margin-bottom:14px;transition:border-color .3s}
+.explain .tag{display:inline-block;font:700 11px Inter,sans-serif;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:20px;color:#fff;background:var(--run);margin-right:8px;vertical-align:2px}
+.grid{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(300px,1fr);gap:14px}
+@media (max-width:980px){.grid{grid-template-columns:1fr}}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.panel h2{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 8px;font-weight:700}
+.side{display:flex;flex-direction:column;gap:14px}
+
+/* code */
+.codebox{background:var(--code);border-radius:12px;padding:12px 0;overflow:auto;position:relative}
+.codebody{position:relative;min-width:640px}
+.ln{display:flex;font:14px/1.62 var(--mono);color:var(--codeink);white-space:pre;position:relative;transition:background .3s,opacity .3s;border-left:4px solid transparent}
+.ln .num{width:44px;text-align:right;padding-right:14px;color:var(--codemuted);user-select:none;flex:none}
+.ln .ann{margin-left:18px;color:#ffd479;font-style:italic;opacity:0;transition:opacity .4s}
+.ln .ann.show{opacity:1}
+.ln.cur{background:rgba(59,130,246,.22);border-left-color:var(--run)}
+.ln.cur.k-throw{background:rgba(229,72,77,.28);border-left-color:var(--throw)}
+.ln.cur.k-no{background:rgba(240,160,32,.22);border-left-color:var(--test)}
+.ln.cur.k-yes,.ln.cur.k-ok{background:rgba(47,158,101,.28);border-left-color:var(--yes)}
+.ln.cur.k-try{background:rgba(142,78,198,.28);border-left-color:var(--try)}
+.ln.skip{opacity:.28}
+.ln.skip .src{text-decoration:line-through;text-decoration-color:rgba(255,255,255,.35)}
+.ln.tested-no .num::after{content:"✗";color:var(--test);position:absolute;left:4px}
+.ln.tested-yes .num::after{content:"✓";color:var(--yes);position:absolute;left:4px}
+.kw{color:var(--kw)} .ty{color:var(--ty)} .st{color:var(--str)} .nu{color:var(--num)} .co{color:var(--com);font-style:italic} .pp{color:var(--pre)}
+.bomb{position:absolute;right:14px;top:0;z-index:3;font:700 12.5px var(--mono);color:#fff;background:var(--throw);padding:3px 10px;border-radius:20px;box-shadow:0 4px 14px rgba(229,72,77,.5);transition:top .7s cubic-bezier(.5,0,.2,1),background .3s,opacity .3s,transform .3s;opacity:0;pointer-events:none;transform:scale(.6)}
+.bomb.show{opacity:1;transform:scale(1)}
+.bomb.caught{background:var(--yes);box-shadow:0 4px 14px rgba(47,158,101,.45)}
+.bomb.pulse{animation:pulse .6s ease}
+@keyframes pulse{0%{transform:scale(1.35)}100%{transform:scale(1)}}
+
+/* stack */
+.stack{display:flex;flex-direction:column-reverse;gap:6px;min-height:84px;justify-content:flex-start}
+.frame{font:600 14px var(--mono);border:1.5px solid var(--run);background:#eef4ff;color:#1e3a8a;border-radius:8px;padding:7px 10px;animation:push .35s ease;display:flex;justify-content:space-between}
+.frame small{font-weight:400;color:var(--muted)}
+.frame.dying{border-color:var(--throw);background:#fdecec;color:#9b1c1f;animation:die 1.4s ease forwards}
+@keyframes push{from{transform:translateY(-10px);opacity:0}to{transform:none;opacity:1}}
+@keyframes die{0%{transform:none;opacity:1}60%{transform:translateX(0);opacity:1}100%{transform:translateX(40px);opacity:.25}}
+.empty{color:var(--muted);font-style:italic;font-size:13.5px}
+
+/* exception card */
+.exc{border:1.5px dashed var(--line);border-radius:10px;padding:10px 12px;min-height:72px;transition:all .3s}
+.exc.fly{border:1.5px solid var(--throw);background:#fdecec}
+.exc.caught{border:1.5px solid var(--yes);background:#e9f6ef}
+.exc .t{font:700 15px var(--mono)}
+.exc .m{font:13px var(--mono);color:#444;word-break:break-word;margin-top:3px}
+.exc .s{float:right;font:700 11px Inter;text-transform:uppercase;letter-spacing:.05em;padding:2px 8px;border-radius:20px;color:#fff}
+
+/* tree */
+.tree ul{list-style:none;margin:0;padding:0 0 0 18px}
+.tree>ul{padding-left:0}
+.tree li{position:relative;padding-left:18px}
+.tree>ul>li{padding-left:0}
+.tree li li::before{content:"";position:absolute;left:0;top:0;bottom:0;border-left:1.5px solid var(--line)}
+.tree li li:last-child::before{bottom:auto;height:17px}
+.tree li li::after{content:"";position:absolute;left:0;top:17px;width:14px;border-top:1.5px solid var(--line)}
+.node{display:inline-flex;align-items:center;gap:6px;font:500 13.5px var(--mono);padding:3px 9px;margin:3px 0;border-radius:7px;border:1.5px solid var(--line);background:#fafaf7;cursor:pointer;transition:all .3s}
+.node:hover{border-color:var(--ink)}
+.node em{font:400 11px Inter;color:var(--muted);font-style:normal}
+.node.ext{border-style:dashed}
+.node.sel{box-shadow:0 0 0 2px var(--ink)}
+.node.thrown{background:var(--throw);border-color:var(--throw);color:#fff}
+.node.thrown em{color:#ffe0e0}
+.node.thrown.caught{background:var(--yes);border-color:var(--yes)}
+.node.path{background:#e9f6ef;border-color:var(--yes);color:#17603b}
+.node.t-no{outline:3px solid var(--test);outline-offset:2px}
+.node.t-yes{outline:3px solid var(--yes);outline-offset:2px}
+.info{margin-top:10px;background:#f3f2ec;border-radius:8px;padding:9px 11px;font-size:14px;min-height:58px}
+.info b{font-family:var(--mono)}
+.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-top:8px}
+.legend span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px;background:var(--c)}
+
+/* console */
+.console{background:#0f1013;color:#d6f5d6;font:13px/1.55 var(--mono);border-radius:9px;padding:10px 12px;min-height:74px;white-space:pre-wrap;word-break:break-word}
+.console .p{color:#6d6f78}
+.console div{animation:push .3s ease}
+
+/* rules */
+.rules{margin-top:18px;display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px}
+.rule{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:14.5px}
+.rule h3{margin:0 0 6px;font-size:15px}
+.rule pre{margin:8px 0 0;background:var(--code);color:var(--codeink);font:12.5px/1.5 var(--mono);padding:8px 10px;border-radius:8px;overflow:auto}
+kbd{font:12px var(--mono);border:1px solid var(--line);border-bottom-width:2px;border-radius:4px;padding:0 5px;background:#fff}
+.hint{color:var(--muted);font-size:13px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Les exceptions en C++ : <code>try</code> / <code>catch</code> pas à pas</h1>
+    <p>Choisissez un scénario, puis avancez étape par étape (<kbd>→</kbd> / <kbd>←</kbd>) ou lancez la lecture (<kbd>espace</kbd>). Le même programme se comporte différemment selon la saisie.</p>
+  </header>
+
+  <div class="scen" id="scen"></div>
+
+  <div class="bar">
+    <button id="restart" title="Recommencer">⟲</button>
+    <button id="prev">◀ Précédent</button>
+    <button id="play" class="primary">▶ Lecture</button>
+    <button id="next">Suivant ▶</button>
+    <label class="hint">Vitesse
+      <select id="speed"><option value="1.6">lente</option><option value="1" selected>normale</option><option value="0.6">rapide</option></select>
+    </label>
+    <div class="prog"><i id="progbar"></i></div>
+    <div class="count" id="count"></div>
+  </div>
+
+  <div class="explain" id="explain"></div>
+
+  <div class="grid">
+    <div class="codebox"><div class="codebody" id="code"><div class="bomb" id="bomb"></div></div></div>
+    <div class="side">
+      <div class="panel">
+        <h2>Pile d’appels</h2>
+        <div class="stack" id="stack"></div>
+      </div>
+      <div class="panel">
+        <h2>Exception en cours</h2>
+        <div class="exc" id="exc"></div>
+      </div>
+      <div class="panel">
+        <h2>Hiérarchie des exceptions standard</h2>
+        <div class="tree" id="tree"></div>
+        <div class="legend">
+          <span style="--c:var(--throw)">lancée</span>
+          <span style="--c:var(--test)">catch testé : non</span>
+          <span style="--c:var(--yes)">catch testé : oui (« est un »)</span>
+        </div>
+        <div class="info" id="info"></div>
+      </div>
+      <div class="panel">
+        <h2>Console</h2>
+        <div class="console" id="console"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="rules">
+    <div class="rule"><h3>1. Lancer : <code>throw</code></h3>
+      On crée un objet exception et on le lance. La fonction s’arrête immédiatement.
+      <pre>if (b == 0)
+    throw std::runtime_error("division par zéro");</pre></div>
+    <div class="rule"><h3>2. Surveiller : <code>try</code></h3>
+      Seules les exceptions lancées <b>pendant</b> le bloc <code>try</code> (y compris dans les fonctions appelées) peuvent être attrapées par ses <code>catch</code>.</div>
+    <div class="rule"><h3>3. Attraper : <code>catch</code></h3>
+      Les <code>catch</code> sont testés <b>dans l’ordre</b>. Le premier dont le type correspond (ou est une classe parente) gagne ; les autres sont ignorés.</div>
+    <div class="rule"><h3>4. Du plus précis au plus général</h3>
+      <code>catch (const std::exception&amp;)</code> attrape tout ce qui en dérive : placé en premier, il « masquerait » les catch suivants.
+      <pre>catch (const std::out_of_range&amp; e) { … } // précis
+catch (const std::exception&amp; e)    { … } // général</pre></div>
+    <div class="rule"><h3>5. Par référence constante</h3>
+      Toujours <code>catch (const Type&amp; e)</code> : pas de copie, et le polymorphisme fonctionne (<code>e.what()</code> donne le bon message).</div>
+    <div class="rule"><h3>6. Et si personne n’attrape ?</h3>
+      L’exception remonte toute la pile jusqu’à sortir de <code>main</code> : le programme est arrêté brutalement par <code>std::terminate()</code>.</div>
+  </div>
+</div>
+
+<script>
+/* ---------- Hiérarchie ---------- */
+const TREE = {
+  exception:{p:null, inc:'&lt;exception&gt;', d:'Classe de base de toutes les exceptions standard. Elle fournit la méthode virtuelle <b>what()</b> qui renvoie un message (const char*). Un <code>catch (const std::exception&amp;)</code> attrape toutes ses classes filles.'},
+  logic_error:{p:'exception', d:'<b>Erreur de logique</b> : un problème qu’on aurait pu éviter en vérifiant les données avant (bug, précondition non respectée).'},
+  invalid_argument:{p:'logic_error', d:'Argument invalide. Exemple : <code>std::stoi("abc")</code> – le texte n’est pas un nombre.'},
+  domain_error:{p:'logic_error', d:'Valeur hors du domaine de définition mathématique (ex. racine d’un négatif). Peu utilisée par la bibliothèque standard, plutôt dans votre propre code.'},
+  length_error:{p:'logic_error', d:'Tentative de dépasser la taille maximale d’un conteneur. Exemple : <code>v.reserve(v.max_size() + 1)</code>.'},
+  out_of_range:{p:'logic_error', d:'Valeur hors des limites autorisées. Exemples : <code>v.at(7)</code> sur un vecteur de 3 éléments, <code>s.at(100)</code>, ou <code>std::stoi("99999999999")</code> (trop grand pour un int).'},
+  runtime_error:{p:'exception', d:'<b>Erreur d’exécution</b> : un problème qu’on ne peut détecter qu’en cours d’exécution (fichier absent, donnée reçue incorrecte…). C’est souvent le type qu’on lance soi‑même.'},
+  range_error:{p:'runtime_error', d:'Le résultat d’un calcul ne peut pas être représenté dans le type de destination.'},
+  overflow_error:{p:'runtime_error', d:'Dépassement arithmétique vers le haut. Exemple : <code>std::bitset::to_ulong()</code> quand la valeur ne tient pas dans un unsigned long.'},
+  underflow_error:{p:'runtime_error', d:'Dépassement arithmétique vers le bas (résultat trop petit pour être représenté).'},
+  bad_alloc:{p:'exception', ext:true, inc:'&lt;new&gt;', d:'Lancée par <code>new</code> quand la mémoire ne peut pas être allouée. Elle n’est pas dans &lt;stdexcept&gt; mais dans <b>&lt;new&gt;</b>.'}
+};
+function buildTree(){
+  const kids = p => Object.keys(TREE).filter(k=>TREE[k].p===p);
+  const li = k => `<li><span class="node${TREE[k].ext?' ext':''}" data-k="${k}">std::${k}${TREE[k].inc?` <em>${TREE[k].inc}</em>`:''}</span>${kids(k).length?`<ul>${kids(k).map(li).join('')}</ul>`:''}</li>`;
+  document.getElementById('tree').innerHTML = `<ul>${li('exception')}</ul>`;
+  document.querySelectorAll('.node').forEach(n=>n.onclick=()=>showInfo(n.dataset.k));
+}
+function showInfo(k){
+  document.querySelectorAll('.node').forEach(n=>n.classList.toggle('sel',n.dataset.k===k));
+  document.getElementById('info').innerHTML = `<b>std::${k}</b> — ${TREE[k].d}`;
+}
+const ancestors = k => { const a=[]; while(k){a.push(k);k=TREE[k].p;} return a; };
+
+/* ---------- Code ---------- */
+function codeLines(sc){ return [
+'#include <iostream>',
+'#include <stdexcept>',
+'#include <string>',
+'#include <vector>',
+'',
+'double diviser(int a, int b) {',
+'    if (b == 0)',
+'        throw std::runtime_error("division par zéro");',
+'    return static_cast<double>(a) / b;',
+'}',
+'',
+'int main() {',
+'    std::vector<int> notes = {4, 5, 6};',
+`    std::string saisie = "${sc.saisie}";`,
+`    int d = ${sc.d};`,
+'    try {',
+'        int i = std::stoi(saisie);     // invalid_argument ?',
+'        int n = notes.at(i);           // out_of_range ?',
+'        double r = diviser(n, d);      // runtime_error ?',
+'        std::cout << "Résultat : " << r << \'\\n\';',
+'    }',
+'    catch (const std::out_of_range& e) {',
+'        std::cout << "Indice invalide : " << e.what() << \'\\n\';',
+'    }',
+'    catch (const std::invalid_argument& e) {',
+'        std::cout << "Pas un nombre : " << e.what() << \'\\n\';',
+'    }',
+'    catch (const std::exception& e) {',
+'        std::cout << "Erreur : " << e.what() << \'\\n\';',
+'    }',
+'    std::cout << "Le programme continue.\\n";',
+'    return 0;',
+'}'];}
+const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function hl(line){
+  if(line.startsWith('#include')){
+    return `<span class="pp">#include</span> <span class="st">${esc(line.slice(9))}</span>`;
+  }
+  const re = /(\/\/.*$)|("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*')|\b(try|catch|throw|return|if|const|static_cast)\b|\b(double|int)\b|(std::\w+)|\b(\d+)\b/g;
+  let out='', last=0, m;
+  while((m=re.exec(line))){
+    out += esc(line.slice(last,m.index));
+    const cls = m[1]?'co':m[2]?'st':m[3]?'kw':m[4]?'ty':m[5]?'ty':'nu';
+    out += `<span class="${cls}">${esc(m[0])}</span>`;
+    last = re.lastIndex;
+  }
+  return out + esc(line.slice(last));
+}
+
+/* ---------- Scénarios ---------- */
+const range = (a,b)=>Array.from({length:b-a+1},(_,i)=>a+i);
+const intro = sc => [
+  {l:12, st:['main()'], t:'Le programme démarre dans <code>main()</code>. La <b>pile d’appels</b> ne contient qu’une fonction.'},
+  {l:13, ann:{13:'taille = 3, indices 0 à 2'}, t:'On crée un vecteur de 3 notes. Les indices valides sont <b>0, 1 et 2</b>.'},
+  {l:14, t:`L’utilisateur a saisi le texte <code>"${sc.saisie}"</code> (c’est une chaîne, pas encore un nombre).`},
+  {l:15, t:`Le diviseur <code>d</code> vaut <code>${sc.d}</code>.`},
+  {l:16, k:'try', t:'On entre dans le bloc <code>try</code> : on « surveille » ces instructions. Si l’une d’elles lance une exception, on saute directement aux <code>catch</code>.'}
+];
+const outro = [
+  {l:31, out:'Le programme continue.', t:'L’exception (s’il y en a eu une) a été traitée : le programme <b>continue normalement</b> après les blocs <code>catch</code>. Il n’a pas planté !'},
+  {l:32, st:[], t:'Fin du programme : <code>return 0</code>.'}
+];
+const OOR_MSG = 'vector::_M_range_check: __n (which is 7) >= this->size() (which is 3)';
+
+const SCEN = [
+ {id:'ok', label:'✅ Tout va bien', saisie:'1', d:2, steps:[
+   {l:17, ann:{17:'i = 1'}, t:'<code>std::stoi("1")</code> convertit le texte en entier : <code>i = 1</code>. Aucun problème.'},
+   {l:18, ann:{18:'n = 5'}, t:'<code>notes.at(1)</code> vérifie l’indice : 1 est valide, donc <code>n = 5</code>.'},
+   {l:19, st:['main()','diviser(5, 2)'], t:'Appel de <code>diviser(5, 2)</code> : la fonction est <b>empilée</b> sur la pile d’appels.'},
+   {l:7, t:'Dans <code>diviser</code> : <code>b == 0</code> ? Non (b vaut 2), donc pas de <code>throw</code>.'},
+   {l:9, ann:{9:'→ 2.5'}, t:'<code>diviser</code> retourne <code>2.5</code> et se termine normalement.'},
+   {l:19, st:['main()'], ann:{19:'r = 2.5'}, t:'De retour dans <code>main</code> : <code>r = 2.5</code>. La fonction a été retirée de la pile.'},
+   {l:20, out:'Résultat : 2.5', t:'Affichage du résultat.'},
+   {l:21, k:'ok', skip:range(22,30), t:'Fin du <code>try</code> <b>sans exception</b> : tous les blocs <code>catch</code> sont ignorés.'},
+   ...outro]},
+ {id:'oor', label:'📏 Indice trop grand', saisie:'7', d:2, steps:[
+   {l:17, ann:{17:'i = 7'}, t:'<code>std::stoi("7")</code> réussit : <code>i = 7</code>.'},
+   {l:18, k:'throw', ex:{type:'out_of_range', msg:OOR_MSG, state:'fly'}, t:'<code>notes.at(7)</code> : le vecteur n’a que 3 éléments ! <code>at()</code> vérifie l’indice et <b>lance</b> une exception <code>std::out_of_range</code>.'},
+   {l:18, k:'throw', skip:[19,20], t:'Le <code>try</code> s’arrête <b>immédiatement</b> : les lignes 19 et 20 ne seront <b>jamais</b> exécutées. On cherche un <code>catch</code> compatible.'},
+   {l:22, k:'yes', test:'out_of_range', ex:{state:'caught'}, t:'1<sup>er</sup> <code>catch</code> : attend un <code>std::out_of_range</code>. L’exception est exactement de ce type → <b>correspondance !</b>'},
+   {l:23, out:'Indice invalide : '+OOR_MSG, t:'On exécute ce bloc. <code>e.what()</code> renvoie le message de l’exception (son texte exact dépend du compilateur).'},
+   {l:24, ex:null, skip:range(25,30), t:'Fin du <code>catch</code> : l’exception est traitée puis détruite. Les <code>catch</code> suivants sont <b>ignorés</b>.'},
+   ...outro]},
+ {id:'inv', label:'🔤 Saisie non numérique', saisie:'abc', d:2, steps:[
+   {l:17, k:'throw', ex:{type:'invalid_argument', msg:'stoi', state:'fly'}, t:'<code>std::stoi("abc")</code> : impossible de convertir « abc » en nombre → <code>stoi</code> <b>lance</b> <code>std::invalid_argument</code>.'},
+   {l:17, k:'throw', skip:[18,19,20], t:'Le reste du <code>try</code> (lignes 18 à 20) est abandonné. On cherche un <code>catch</code> compatible, dans l’ordre.'},
+   {l:22, k:'no', test:'out_of_range', t:'1<sup>er</sup> <code>catch</code> : un <code>invalid_argument</code> est‑il un <code>out_of_range</code> ? <b>Non</b> : ce sont deux « frères » (tous deux enfants de <code>logic_error</code>). On passe au suivant.'},
+   {l:25, k:'yes', test:'invalid_argument', ex:{state:'caught'}, t:'2<sup>e</sup> <code>catch</code> : <code>invalid_argument</code> → <b>correspondance !</b>'},
+   {l:26, out:'Pas un nombre : stoi', t:'On affiche le message. Avec GCC, <code>e.what()</code> renvoie simplement « stoi ».'},
+   {l:27, ex:null, skip:range(28,30), t:'Fin du <code>catch</code>. Le dernier <code>catch</code> est ignoré.'},
+   ...outro]},
+ {id:'div', label:'➗ Division par zéro', saisie:'0', d:0, steps:[
+   {l:17, ann:{17:'i = 0'}, t:'<code>std::stoi("0")</code> : <code>i = 0</code>.'},
+   {l:18, ann:{18:'n = 4'}, t:'<code>notes.at(0)</code> : indice valide, <code>n = 4</code>.'},
+   {l:19, st:['main()','diviser(4, 0)'], t:'Appel de <code>diviser(4, 0)</code> : la fonction est empilée.'},
+   {l:7, k:'no', t:'<code>b == 0</code> ? <b>Oui !</b> On ne peut pas diviser par zéro…'},
+   {l:8, k:'throw', ex:{type:'runtime_error', msg:'division par zéro', state:'fly'}, t:'<code>throw std::runtime_error(...)</code> : on <b>crée</b> un objet exception avec un message, et on le <b>lance</b>.'},
+   {l:8, k:'throw', dy:true, skip:[9], t:'Y a‑t‑il un <code>try</code> dans <code>diviser()</code> ? <b>Non.</b> L’exception sort de la fonction : la ligne 9 n’est pas exécutée et la fonction est retirée de la pile (« <b>déroulement de la pile</b> »).'},
+   {l:19, k:'throw', st:['main()'], skip:[20], t:'L’exception <b>remonte</b> dans l’appelant, <code>main</code>, à la ligne 19 — qui est dans un <code>try</code>. <code>r</code> n’est jamais affecté et la ligne 20 est sautée.'},
+   {l:22, k:'no', test:'out_of_range', t:'1<sup>er</sup> <code>catch</code> : un <code>runtime_error</code> est‑il un <code>out_of_range</code> ? <b>Non.</b>'},
+   {l:25, k:'no', test:'invalid_argument', t:'2<sup>e</sup> <code>catch</code> : est‑il un <code>invalid_argument</code> ? <b>Non plus.</b>'},
+   {l:28, k:'yes', test:'exception', ex:{state:'caught'}, t:'3<sup>e</sup> <code>catch</code> : <code>runtime_error</code> dérive de <code>exception</code>, donc un runtime_error <b>EST UNE</b> exception → <b>correspondance !</b> (polymorphisme : voir le chemin vert dans la hiérarchie)'},
+   {l:29, out:'Erreur : division par zéro', t:'<code>e.what()</code> renvoie le message donné au moment du <code>throw</code>.'},
+   {l:30, ex:null, t:'Fin du <code>catch</code> : l’exception est détruite.'},
+   ...outro]},
+ {id:'big', label:'🔢 Nombre trop grand', saisie:'99999999999', d:2, steps:[
+   {l:17, k:'throw', ex:{type:'out_of_range', msg:'stoi', state:'fly'}, t:'<code>std::stoi("99999999999")</code> : c’est bien un nombre, mais trop grand pour un <code>int</code> → <code>stoi</code> lance <code>std::out_of_range</code> !'},
+   {l:17, k:'throw', skip:[18,19,20], t:'Le reste du <code>try</code> est abandonné.'},
+   {l:22, k:'yes', test:'out_of_range', ex:{state:'caught'}, t:'1<sup>er</sup> <code>catch</code> : <code>out_of_range</code> → <b>correspondance !</b>'},
+   {l:23, out:'Indice invalide : stoi', t:'⚠️ Le message parle d’« indice invalide »… alors que le problème vient de la <b>conversion</b> ! Une même exception peut venir de plusieurs endroits : il faut des <code>try</code> bien ciblés et lire <code>e.what()</code>.'},
+   {l:24, ex:null, skip:range(25,30), t:'Fin du <code>catch</code> ; les suivants sont ignorés.'},
+   ...outro]}
+];
+
+/* ---------- Moteur ---------- */
+let sc, steps, idx=0, timer=null;
+const $ = id => document.getElementById(id);
+const KLABEL = {run:['Exécution','var(--run)'], throw:['Exception !','var(--throw)'], no:['Test','var(--test)'], yes:['Attrapée','var(--yes)'], ok:['OK','var(--yes)'], try:['try','var(--try)']};
+
+function buildScen(){
+  $('scen').innerHTML = SCEN.map((s,i)=>`<button data-i="${i}">${s.label}<small>saisie = "${s.saisie}", d = ${s.d}</small></button>`).join('');
+  $('scen').querySelectorAll('button').forEach(b=>b.onclick=()=>load(+b.dataset.i));
+}
+function load(i){
+  stop(); sc = SCEN[i]; steps = [...intro(sc), ...sc.steps]; idx = 0;
+  $('scen').querySelectorAll('button').forEach((b,j)=>b.classList.toggle('on',j===i));
+  const lines = codeLines(sc);
+  $('code').innerHTML = lines.map((l,n)=>`<div class="ln" data-n="${n+1}"><span class="num">${n+1}</span><span class="src">${hl(l)||' '}</span><span class="ann"></span></div>`).join('') + '<div class="bomb" id="bomb"></div>';
+  render(true);
+}
+function state(upto){
+  const s = {stack:[], ex:null, out:[], skip:new Set(), ann:{}, tested:{}};
+  for(let i=0;i<=upto;i++){
+    const st = steps[i];
+    if(st.st) s.stack = st.st;
+    if(st.ex===null) s.ex=null; else if(st.ex) s.ex = {...(s.ex||{}), ...st.ex};
+    if(st.out) s.out.push(st.out);
+    if(st.skip) st.skip.forEach(x=>s.skip.add(x));
+    if(st.ann) Object.assign(s.ann, st.ann);
+    if(st.test) s.tested[st.l] = st.k;
+  }
+  return s;
+}
+function render(first){
+  const st = steps[idx], s = state(idx), k = st.k||'run';
+  // code
+  document.querySelectorAll('.ln').forEach(el=>{
+    const n = +el.dataset.n;
+    el.className = 'ln' + (n===st.l?` cur k-${k}`:'') + (s.skip.has(n)?' skip':'') + (s.tested[n]?` tested-${s.tested[n]}`:'');
+    const a = el.querySelector('.ann');
+    if(s.ann[n]){ a.textContent = '// '+s.ann[n]; a.classList.add('show'); } else { a.textContent=''; a.classList.remove('show'); }
+  });
+  const cur = document.querySelector(`.ln[data-n="${st.l}"]`);
+  if(cur && !first) cur.scrollIntoView({block:'nearest',behavior:'smooth'});
+  // bomb
+  const bomb = $('bomb');
+  if(s.ex){
+    const wasHidden = !bomb.classList.contains('show') || bomb.dataset.type!==s.ex.type;
+    bomb.textContent = (s.ex.state==='caught'?'✓ ':'💥 ')+'std::'+s.ex.type;
+    bomb.dataset.type = s.ex.type;
+    bomb.style.top = (cur.offsetTop + 1)+'px';
+    bomb.classList.add('show'); bomb.classList.toggle('caught', s.ex.state==='caught');
+    if(wasHidden || k==='yes'){ bomb.classList.remove('pulse'); void bomb.offsetWidth; bomb.classList.add('pulse'); }
+  } else { bomb.classList.remove('show','caught'); bomb.dataset.type=''; }
+  // explanation
+  const [lab,col] = KLABEL[k];
+  $('explain').style.borderLeftColor = col;
+  $('explain').innerHTML = `<span class="tag" style="background:${col}">Ligne ${st.l} · ${lab}</span>${st.t}`;
+  // stack
+  $('stack').innerHTML = s.stack.length ? s.stack.map((f,i)=>`<div class="frame${st.dy&&i===s.stack.length-1?' dying':''}">${f}<small>${i===s.stack.length-1?'← en cours':''}</small></div>`).join('') : '<div class="empty">Pile vide : le programme est terminé.</div>';
+  // exception card
+  const e = $('exc');
+  if(s.ex){
+    const caught = s.ex.state==='caught';
+    e.className = 'exc '+(caught?'caught':'fly');
+    e.innerHTML = `<span class="s" style="background:${caught?'var(--yes)':'var(--throw)'}">${caught?'attrapée':'en vol'}</span><div class="t">std::${s.ex.type}</div><div class="m">what() → "${esc(s.ex.msg)}"</div>`;
+  } else { e.className='exc'; e.innerHTML='<div class="empty">Aucune exception en cours.</div>'; }
+  // tree
+  const thrown = s.ex && s.ex.type, test = st.test;
+  const path = (test && k==='yes' && thrown) ? ancestors(thrown).slice(0, ancestors(thrown).indexOf(test)+1) : [];
+  document.querySelectorAll('.node').forEach(n=>{
+    const key = n.dataset.k;
+    n.classList.toggle('thrown', key===thrown);
+    n.classList.toggle('caught', key===thrown && s.ex.state==='caught');
+    n.classList.toggle('path', path.includes(key) && key!==thrown);
+    n.classList.toggle('t-no', key===test && k==='no');
+    n.classList.toggle('t-yes', key===test && k==='yes');
+  });
+  if(test) showInfo(test); else if(thrown) showInfo(thrown); else if(first) showInfo('exception');
+  // console
+  $('console').innerHTML = '<div class="p">$ ./programme</div>' + s.out.map(o=>`<div>${esc(o)}</div>`).join('');
+  // controls
+  $('count').textContent = `Étape ${idx+1}/${steps.length}`;
+  $('progbar').style.width = ((idx+1)/steps.length*100)+'%';
+  $('prev').disabled = idx===0; $('next').disabled = idx===steps.length-1;
+}
+function go(d){ const n = Math.max(0,Math.min(steps.length-1, idx+d)); if(n!==idx){ idx=n; render(); } }
+function tick(){ if(idx>=steps.length-1){ stop(); return; } go(1); timer=setTimeout(tick, 3200*(+$('speed').value)); }
+function play(){ if(idx>=steps.length-1){ idx=0; render(); } $('play').textContent='❚❚ Pause'; timer=setTimeout(tick, 900); }
+function stop(){ clearTimeout(timer); timer=null; $('play').textContent='▶ Lecture'; }
+$('play').onclick = ()=> timer?stop():play();
+$('next').onclick = ()=>{stop();go(1);};
+$('prev').onclick = ()=>{stop();go(-1);};
+$('restart').onclick = ()=>{stop();idx=0;render();};
+document.addEventListener('keydown',e=>{
+  if(e.target.tagName==='SELECT') return;
+  if(e.key==='ArrowRight'){stop();go(1);e.preventDefault();}
+  else if(e.key==='ArrowLeft'){stop();go(-1);e.preventDefault();}
+  else if(e.key===' '){timer?stop():play();e.preventDefault();}
+});
+buildTree(); buildScen(); load(0);
+</script>
+</body>
+</html>
